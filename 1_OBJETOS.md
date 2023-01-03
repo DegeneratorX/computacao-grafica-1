@@ -87,14 +87,18 @@ x(t) \\
 y(t)
 \end{pmatrix}$$
 
-Exemplo: $x = 2t$ e $y = t² - 1$. Para $t = 1$, produz $x = 2$ e $y = 0$. Ou seja:
+Exemplo: $x = 2t$ e $y = t² - 1$. Para $t = 1$, produz $x = 2$ e $y = 0$.
 
 
 ## Curvas de Bézier Cúbicas
 
 As **curvas de Bézier Cúbicas** são necessárias para produzir desenhos em 3D. Seguem a seguinte função:
 
-$$\large a+bt+ct^{2}+dt^{3}$$
+$$\large F(t) = \begin{pmatrix}
+x(t) \\
+y(t) \\
+z(t)
+\end{pmatrix} = a+bt+ct^{2}+dt^{3}$$
 
 Onde $a , b , c , d$ são valores constantes que podem ser diferentes para cada coordenada.
 

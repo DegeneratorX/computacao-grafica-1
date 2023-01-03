@@ -88,6 +88,6 @@ Exemplo: $x = 2t$ e $y = t² - 1$. Para $t = 1$, produz $x = 2$ e $y = 0$.
 
 As **curvas de Bézier Cúbicas** são necessárias para produzir desenhos em 3D. Seguem a seguinte função:
 
-$a+bt+ct^{2}+dt^{3}$
+$\large a+bt+ct^{2}+dt^{3}$
 
 ### Condições de contorno

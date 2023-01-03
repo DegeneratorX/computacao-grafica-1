@@ -82,12 +82,7 @@ As **curvas paramétricas** são curvas originadas quando se tem um input para u
 
 No caso de uma curva bidimensional, inserir um valor em uma função produz uma coordenada X e uma coordenada Y, e diferentes valores podem gerar diferentes coordenadas, de tal forma que ao ligar todos os pontos, pode produzir um gráfico não linear (curva).
 
-$
-F(t) = \begin{pmatrix}
-x(t) \\
-y(t)
-\end{pmatrix}
-$
+$F(t) = \begin{pmatrix}x(t) \\y(t)\end{pmatrix}$
 
 Exemplo: $x = 2t$ e $y = t² - 1$. Para $t = 1$, produz $x = 2$ e $y = 0$. Ou seja:
 

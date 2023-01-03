@@ -100,6 +100,15 @@ y(t) \\
 z(t)
 \end{pmatrix} = a+bt+ct^{2}+dt^{3}$$
 
-Onde $a , b , c , d$ são valores constantes que podem ser diferentes para cada coordenada.
+Onde a, b, c, d são valores constantes que podem ser diferentes para cada coordenada x, y e z.
 
 ### Condições de contorno
+
+Precisamos achar os valores a, b, c, d para cada caso. Pra isso utilizamos as seguinte notação:
+
+- Seja $P_{0}$, $P_{1}$, $P_{2}$ e $P_{3}$ pontos aleatórios. Seja uma linha, e $P_{0}$ sempre o ponto inicial dessa linha e $P_{3}$ o ponto final.
+- $P_{1}$ e $P_{2}$ são pontos que estão entre $P_{0}$ e $P_{3}$.
+
+COLOCAR IMAGEM
+
+- Sempre que um ponto aparece, ele "puxa" a linha de forma tangente, formando uma curva paramétrica.

@@ -16,9 +16,9 @@ O triângulo é eficiente em memória e processamento, pois o mínimo de pontos 
 
 O processo de conversão de faces não triangulares para triangulares é chamado de **triangulação**. Existem diversos algoritmos eficientes que buscam triangular superfícies de forma automática.
 
-Veja esse cubo por exemplo. As duas figuras mostram ele opaco e transparente para melhor visualização. As linhas laranjas representam a triangulação. A escolha para formar as arestas de triangulação (linhas laranja) são normalmente aleatórias.
+Veja esse cubo abaixo por exemplo. As duas figuras mostram ele opaco e transparente para melhor visualização. As linhas laranjas representam a triangulação. A escolha para formar as arestas de triangulação (linhas laranja) são normalmente aleatórias.
 
-- COLOCAR IMAGEM
+![image](https://user-images.githubusercontent.com/98990221/209157097-8add3d6a-8585-48f0-83c7-ee0827ba8591.png)
 
 - Essas são as coordenadas dos vértices (observe o cartesiano 3D).
 

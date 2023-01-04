@@ -164,9 +164,9 @@ Nesse momento temos 4 equações e 4 variáveis a, b, c, d. Podemos montar um si
 
 Sabendo que $b = P_{1}-P_{0}$ e $a = P_{0}$, substituímos a segunda e a quarta equação:
 
-$$\large\overset{a}{P_{0}}+\overset{b}{P_{1}-P_{0}}+c+d=P_{3} & \Rightarrow \boxed{P_{3}-P_{1} = c+d}$$
+$$\large\overset{a}{P_{0}}+\overset{b}{P_{1}-P_{0}}+c+d=P_{3} \Rightarrow \boxed{P_{3}-P_{1} = c+d}$$
 
-$$\overset{b}{P_{1}-P_{0}}+2c+3d = P_{3}-P_{2} & \Rightarrow \boxed{P_{3}-P_{2}+P_{0}-P_{1}=2c+3d}$$
+$$\overset{b}{P_{1}-P_{0}}+2c+3d = P_{3}-P_{2} \Rightarrow \boxed{P_{3}-P_{2}+P_{0}-P_{1}=2c+3d}$$
 
 Multiplicando 2x a primeira equação e igualando $2c = 2c$ da primeira com a segunda, resulta em:
 

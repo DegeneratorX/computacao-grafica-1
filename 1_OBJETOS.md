@@ -146,7 +146,7 @@ z(1)
 
 - $P_{1}-P_{0}$, substituímos a derivada por 0
 
-$$P_{1}-P_{0} = P'(0) = \begin{pmatrix}
+$$\large P_{1}-P_{0} = P'(0) = \begin{pmatrix}
 x'(0) \\
 y'(0) \\
 z'(0)
@@ -154,7 +154,7 @@ z'(0)
 
 - $P_{3}-P_{2}$, substituímos a derivada por 1.
 
-$$P_{3}-P_{2} = P'(1) = \begin{pmatrix}
+$$\large P_{3}-P_{2} = P'(1) = \begin{pmatrix}
 x'(1) \\
 y'(1) \\
 z'(1)

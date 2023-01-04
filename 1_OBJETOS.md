@@ -113,7 +113,7 @@ Precisamos achar os valores a, b, c, d para cada caso. Pra isso utilizamos as se
 
 - Sempre que um ponto aparece, ele "puxa" a linha de forma tangente, formando uma curva paramétrica.
 
-Usamos o intervalo $[0, 1]$ substituinto em $t$ pra definir os pontos infinitesimais dessa curva. O ponto 0 define o ponto inicial da curva ($P_{0}$), e o ponto 1 define o ponto final dessa curva ($P_{3}$).
+Usamos o intervalo $[0, 1]$ substituinto em $t$ pra definir os pontos infinitesimais dessa curva. O ponto 0 define o ponto inicial da curva $P_{0}$, e o ponto 1 define o ponto final dessa curva $P_{3}$.
 
 Já os pontos $P_{1}$ e $P_{2}$ (que não pertencem a curva) são obtidos ao derivar a função $a+bt+ct^{2}+dt^{3}$, pois são tangentes aos seus respectivos pontos de início e fim. Após derivar, substituimos $t$ por 0 para descobrir o ponto $P_{1}$, e substituimos $t$ por 1 para descobrir o ponto $P_{2}$.
 
@@ -125,10 +125,10 @@ $$P_{0} = \large P(0) = \begin{pmatrix}
 x(0) \\ 
 y(0) \\ 
 z(0) 
-\end{pmatrix} = a+b0+c0^{2}+d0^{3} = \boxed{a}$$
+\end{pmatrix} = a+b0+c0^{2}+d0^{3} = \boxed{P_{0} = a}$$
 
 $$P_{3} = \large P(1) = \begin{pmatrix} 
 x(1) \\ 
 y(1) \\ 
 z(1) 
-\end{pmatrix} = a+b1+c1^{2}+d1^{3} = \boxed{P_{0}+b+c+d}$$
+\end{pmatrix} = a+b1+c1^{2}+d1^{3} \to \boxed{P_{3} = P_{0}+b+c+d}$$

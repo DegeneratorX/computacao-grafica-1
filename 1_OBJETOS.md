@@ -197,4 +197,4 @@ $$\Large P(t) = B_{0}(t)+B_{1}(t)+B_{2}(t)+B_{3}(t)$$
 
 Uma curva de Bézier cúbica só pode ter 1 inflexão, pois é um polinômio de grau cúbico (o gráfico de terceiro grau possui uma inflexão). Mais do que uma inflexão, representa um polinômio de quarto grau ou maior. Nesse caso se aplica uma técnica de emendar várias curvas de Bézier cúbicas ou outro tipo de curva, como a curva B-Spline.
 
-INSERIR IMAGEM EXEMPLO
+![image](https://user-images.githubusercontent.com/98990221/210648386-149bccb2-8b75-4851-bd2d-f09f507b9557.png)

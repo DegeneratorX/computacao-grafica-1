@@ -127,8 +127,8 @@ y(0) \\
 z(0) 
 \end{pmatrix} = a+b0+c0^{2}+d0^{3} = \boxed{a}$$
 
-P_{3} = \large P(1) = \begin{pmatrix} 
+$$P_{3} = \large P(1) = \begin{pmatrix} 
 x(1) \\ 
 y(1) \\ 
 z(1) 
-\end{pmatrix} = a+b1+c1^{2}+d1^{3} = \boxed{P_{0}+b+c+d}
+\end{pmatrix} = a+b1+c1^{2}+d1^{3} = \boxed{P_{0}+b+c+d}$$

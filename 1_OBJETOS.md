@@ -171,7 +171,7 @@ $$\large \left\{ \begin{array}{cl}
 
 Multiplicando 2x a primeira equação e igualando $2c = 2c$ da primeira com a segunda, resulta em:
 
-$$\large \boxed{d = -P_{3} - P_{2} + P_{0} + P_{1}}$$
+$$\large\boxed{d = -P_{3} - P_{2} + P_{0} + P_{1}}$$
 
 Pegando esse $d$ descoberto e substituindo na primeira equação, temos que
 
@@ -183,4 +183,4 @@ $$\large P(t) = P_{0} + (P_{1}-P_{0})t + (-P_{0}-2P_{1}+P_{2}+2P_{3})t^{2}+(-P_{
 
 Isolando os pontos $P_{0}$, $P_{1}$, $P_{2}$, $P_{3}$, temos a equação final:
 
-$$\Large P(t) = P_{0}(1-t-t^{2}+t^{3})+P_{1}(t-2t^{2}+t^{3})+P_{2}(t^{2}-t^{3})+P_{3}(2t^{2}-t^{3})$$
+$$\Large\boxed{P(t) = P_{0}(1-t-t^{2}+t^{3})+P_{1}(t-2t^{2}+t^{3})+P_{2}(t^{2}-t^{3})+P_{3}(2t^{2}-t^{3})}$$

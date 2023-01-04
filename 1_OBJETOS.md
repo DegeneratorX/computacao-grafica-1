@@ -109,6 +109,6 @@ Precisamos achar os valores a, b, c, d para cada caso. Pra isso utilizamos as se
 - Seja $P_{0}$, $P_{1}$, $P_{2}$ e $P_{3}$ pontos aleatórios. Seja uma linha, e $P_{0}$ sempre o ponto inicial dessa linha e $P_{3}$ o ponto final.
 - $P_{1}$ e $P_{2}$ são pontos que estão entre $P_{0}$ e $P_{3}$.
 
-COLOCAR IMAGEM
+![image](https://user-images.githubusercontent.com/98990221/210604462-2419a145-0947-4689-b5f0-8fe481a4dbc5.png)
 
 - Sempre que um ponto aparece, ele "puxa" a linha de forma tangente, formando uma curva paramétrica.

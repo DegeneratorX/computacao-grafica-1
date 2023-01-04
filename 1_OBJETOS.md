@@ -109,7 +109,7 @@ z'(t)
 \end{pmatrix} = b+2ct+3dt^{2}$$
 
 
-Onde a, b, c, d são valores constantes que podem ser diferentes para cada coordenada x, y e z. Tanto a função quanto a derivada serão utilizadas.
+Onde a, b, c, d são valores que podem ser diferentes para cada coordenada x, y e z. Tanto a função quanto a derivada serão utilizadas.
 
 ### Condições de contorno
 
@@ -142,7 +142,7 @@ $$\large P_{3} = P(1) = \begin{pmatrix}
 x(1) \\ 
 y(1) \\ 
 z(1) 
-\end{pmatrix} = a+b1+c1^{2}+d1^{3} \Rightarrow \boxed{P_{3} = P_{0}+b+c+d}$$
+\end{pmatrix} = a+b1+c1^{2}+d1^{3} \Rightarrow \boxed{P_{3} = a+b+c+d}$$
 
 - $P_{1}-P_{0}$, substituímos a derivada por 0
 
@@ -160,3 +160,27 @@ y'(1) \\
 z'(1)
 \end{pmatrix} = b + 2c1 + 3d1^{2} \Rightarrow \boxed{P_{3}-P_{2} = b + 2c + 3d}$$
 
+Nesse momento temos 4 equações e 4 variáveis a, b, c, d. Podemos montar um sistema linear.
+
+Sabendo que $b = P_{1}-P_{0}$ e $a = P_{0}$, substituímos a segunda e a quarta equação:
+
+$$\large \left\{ \begin{array}{cl}
+\overset{a}{P_{0}}+\overset{b}{P_{1}-P_{0}}+c+d=P_{3} & \Rightarrow \boxed{P_{3}-P_{1} = c+d}\\
+\overset{b}{P_{1}-P_{0}}+2c+3d = P_{3}-P_{2} & \Rightarrow \boxed{P_{3}-P_{2}+P_{0}-P_{1}=2c+3d}
+\end{array} \right.$$
+
+Multiplicando 2x a primeira equação e igualando $2c = 2c$ da primeira com a segunda, resulta em:
+
+$$\large \boxed{d = -P_{3} - P_{2} + P_{0} + P_{1}}$$
+
+Pegando esse $d$ descoberto e substituindo na primeira equação, temos que
+
+$$\large c = P_{3} - P_{1} -(-P_{3}-P_{2}+P_{0}+P_{1}) \Rightarrow \boxed{c = -P_{0} - 2P_{1} + P_{2} + 2P_{3}}$$
+
+Com a, b,c, d descobertos, agora podemos substituir a equação original $P(t)$:
+
+$$\large P(t) = P_{0} + (P_{1}-P_{0})t + (-P_{0}-2P_{1}+P_{2}+2P_{3})t^{2}+(-P_{3}-P_{2}+P_{0}+P_{1})t^{3}$$
+
+Isolando os pontos $P_{0}$, $P_{1}$, $P_{2}$, $P_{3}$, temos a equação final:
+
+$$\Large P(t) = P_{0}(1-t-t^{2}+t^{3})+P_{1}(t-2t^{2}+t^{3})+P_{2}(t^{2}-t^{3})+P_{3}(2t^{2}-t^{3})$$

@@ -115,18 +115,18 @@ Onde a, b, c, d são valores que podem ser diferentes para cada coordenada x, y 
 
 Precisamos achar os valores a, b, c, d para cada caso. Pra isso utilizamos as seguinte notação:
 
-- Seja $P_{0}$, $P_{1}$, $P_{2}$ e $P_{3}$ pontos aleatórios. Seja uma linha, e $P_{0}$ sempre o ponto inicial dessa linha e $P_{3}$ o ponto final.
+- Seja $P_{0}$, $P_{1}$, $P_{2}$ e $P_{3}$ pontos aleatórios de controle sobre um plano. Seja uma linha, e $P_{0}$ sempre o ponto de controle inicial dessa linha e $P_{3}$ o ponto de controle final.
 - $P_{1}$ e $P_{2}$ são pontos que estão entre $P_{0}$ e $P_{3}$.
 
 ![image](https://user-images.githubusercontent.com/98990221/210604462-2419a145-0947-4689-b5f0-8fe481a4dbc5.png)
 
-- Sempre que um ponto aparece, ele "puxa" a linha de forma tangente, formando uma curva paramétrica.
+- Sempre que um ponto de controle aparece entre $P_{0}$ e $P_{3}$, ele "puxa" a linha de forma tangente, formando uma curva paramétrica. Ou seja,, nesse caso $P_{1}$ e $P_{2}$.
 
 Usamos o intervalo $[0, 1]$ substituinto em $t$ pra definir os pontos infinitesimais dessa linha. O ponto 0 define o ponto inicial da curva $P_{0}$, e o ponto 1 define o ponto final dessa curva $P_{3}$.
 
-Já os pontos $P_{1}$ e $P_{2}$ (que não pertencem a curva) são subtraídos por $P_{0}$ e $P_{3}$, respectivamente, pois são as tangentes correspondentes a esses pontos (inicio e fim). E a subtração deles deve resultar na derivada da função $a+bt+ct^{2}+dt^{3}$ e substituição de t por 0 ou 1.
+Já os pontos $P_{1}$ e $P_{2}$ (que não pertencem a curva) são subtraídos por $P_{0}$ e $P_{3}$, respectivamente, para representar o vetor tangente a curva na saída e na chegada, respectivamentes, pois são as tangentes correspondentes a esses pontos (inicio e fim da linha). E a subtração deles deve resultar na derivada da função $a+bt+ct^{2}+dt^{3}$ e substituição de t por 0 ou 1.
 
-**Exemplo:**
+**Exemplo pra ficar mais claro:**
 
 - Ponto $P_{0}$, substituímos por 0.
 
@@ -183,3 +183,18 @@ $$\large P(t) = P_{0} + (P_{1}-P_{0})t + (-P_{0}-2P_{1}+P_{2}+2P_{3})t^{2}+(-P_{
 Isolando os pontos $P_{0}$, $P_{1}$, $P_{2}$, $P_{3}$, temos a equação final:
 
 $$\Large\boxed{P(t) = P_{0}(1-t-t^{2}+t^{3})+P_{1}(t-2t^{2}+t^{3})+P_{2}(t^{2}-t^{3})+P_{3}(2t^{2}-t^{3})}$$
+
+> Nota: Perceba que se eu substituir $t$ por 0, dará $P_{0}$. Se eu substituir $t$ por 1, dará $P_{3}$. Se não der, está errado.
+
+Cada parte dessa função $P(t)$ é chamada de **Função de Bézier**, e é definida por $B_{i}(t). Nesse caso:
+
+$$\large B_{0}(t) = P_{0}(1-t-t^{2}+t^{3})$$
+$$\large B_{1}(t) = P_{1}(t-2t^{2}+t^{3})$$
+$$\large B_{2}(t) = P_{2}(t^{2}-t^{3})$$
+$$\large B_{3}(t) = P_{3}(2t^{2}-t^{3})$$
+
+$$\Large P(t) = B_{0}(t)+B_{1}(t)+B_{2}(t)+B_{3}(t)$$
+
+Uma curva de Bézier cúbica só pode ter 1 inflexão, pois é um polinômio de grau cúbico (o gráfico de terceiro grau possui uma inflexão). Mais do que uma inflexão, representa um polinômio de quarto grau ou maior. Nesse caso se aplica uma técnica de emendar várias curvas de Bézier cúbicas ou outro tipo de curva, como a curva B-Spline.
+
+INSERIR IMAGEM EXEMPLO

@@ -186,7 +186,7 @@ $$\Large\boxed{P(t) = P_{0}(1-t-t^{2}+t^{3})+P_{1}(t-2t^{2}+t^{3})+P_{2}(t^{2}-t
 
 > Nota: Perceba que se eu substituir $t$ por 0, dará $P_{0}$. Se eu substituir $t$ por 1, dará $P_{3}$. Se não der, está errado.
 
-Cada parte dessa função $P(t)$ é chamada de **Função de Bézier**, e é definida por $B_{i}(t)$. Nesse caso:
+Cada parte dessa função $P(t)$ é chamada de **Função Blending de Bézier**, e é definida por $B_{i}(t)$. Nesse caso:
 
 - $\large B_{0}(t) = P_{0}(1-t-t^{2}+t^{3})$
 - $\large B_{1}(t) = P_{1}(t-2t^{2}+t^{3})$

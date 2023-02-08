@@ -212,4 +212,15 @@ Refazendo tudo com o objetivo de chegar em $P(t)$ novamente, fica:
 
 $$\Large P(t) = P_{0}[(1-t)^{3}] + P_{1}[3(1-t)^{2}t]+P_{2}[3(1-t)t^{2}]+P_{3}[t^3]$$
 
+Uma forma alternativa de desenvolver o polinômio de Bézier é usando a construção recursiva de Casteljau, isto é o polígono de controle de um polinômio de Bézier tem três segmentos:
+
+- $\large S_{1}(t) = P_{0}(1-t)+P_{1}t$
+- $\large S_{2}(t) = P_{1}(1-t)+P_{2}t$
+- $\large S_{3}(t) = P_{2}(1-t)+P_{3}t$
+
+Essas funções $S$ são segmentos, e estão representadas nessa figura. Basicamente segmentos de um ponto para outro:
+
 ![image](https://user-images.githubusercontent.com/98990221/217605836-05a445c8-f597-44b5-9d2f-3637f87b1a89.png)
+
+Perceba que se eu substituir $t$ por $0$ nessas equações, se obtém o ponto inicial. E se eu substituir por $1$, obtenho o ponto final. Ou seja, $t = 0.5$ será um ponto no meio de $S_{1}$, $S_{2}$ ou $S_{3}$, e a escolha pra $t$ é infinitesimal, desde que esteja no intervalo $(0,1)$.
+

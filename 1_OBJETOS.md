@@ -212,4 +212,4 @@ Refazendo tudo com o objetivo de chegar em $P(t)$ novamente, fica:
 
 $$\Large P(t) = P_{0}[(1-t)^{3}] + P_{1}[3(1-t)^{2}t]+P_{2}[3(1-t)t^{2}]+P_{3}[t^3]$$
 
-![image](https://user-images.githubusercontent.com/98990221/217597142-0f17ad84-bda6-427b-acad-461ad8228ff9.png)
+![image](https://user-images.githubusercontent.com/98990221/217605836-05a445c8-f597-44b5-9d2f-3637f87b1a89.png)

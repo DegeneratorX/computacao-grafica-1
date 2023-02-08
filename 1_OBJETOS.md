@@ -198,3 +198,17 @@ $$\Large P(t) = B_{0}(t)+B_{1}(t)+B_{2}(t)+B_{3}(t)$$
 Uma curva de Bézier cúbica só pode ter 1 inflexão, pois é um polinômio de grau cúbico (o gráfico de terceiro grau possui uma inflexão). Mais do que uma inflexão, representa um polinômio de quarto grau ou maior. Nesse caso se aplica uma técnica de emendar várias curvas de Bézier cúbicas ou outro tipo de curva, como a curva B-Spline.
 
 ![image](https://user-images.githubusercontent.com/98990221/210648386-149bccb2-8b75-4851-bd2d-f09f507b9557.png)
+
+
+### Construção Recursiva de Casteljau
+
+Para compatibilizar a construção de Curvas de Bézier Cúbicas através do uso do método recursivo de Casteljau, é preciso pegar os vetores de derivada $P_{1}-P_{0}$ e $P_{3}-P_{2}$ e multiplicar por 3. E depois refazer os cálculos acima, só que multiplicados por 3. Assim:
+
+- $\large 3(P_{1}-P_{0})$
+- $\large 3(P_{3}-P_{2})$
+- Mantem o $P_{0}$ e $P_{3}$.
+
+Refazendo tudo com o objetivo de chegar em $P(t)$ novamente, fica:
+
+$$\Large P(t) = P_{0}[(1-t)^{3}] + P_{1}[3(1-t)^{2}t]+P_{2}[3(1-t)t^{2}]+P_{3}[t^3]$$
+

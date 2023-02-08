@@ -19,9 +19,11 @@
 #  include <GLUT/glut.h>
 #  include <OpenGL/glext.h>
 #else
-//#  include <GL/glew.h>
-#  include <GL/glut.h>
-#  include <OpenGL/glext.h>
+#  include <GL/glew.h>
+//#  include <GLUT/glut.h>
+# include<GL/freeglut.h>
+//#  include <OpenGL/glext.h>
+#include<GL/glext.h>
 #pragma comment(lib, "glew64.lib") // Compiler directive to include the GLEW library.
 #endif
 

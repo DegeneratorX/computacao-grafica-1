@@ -1,55 +1,64 @@
 import pygame
+import numpy
+import time
 
 class Screen:
-    def __init__(self, tam_x, tam_y, color_fill) -> None:
-        self.__tam_x = tam_x
-        self.__tam_y = tam_y
-        self.__color_display = color_fill
+    def __init__(self, width, height, background_color):
+        self.__screen = pygame.display.set_mode((width, height),pygame.HWSURFACE | pygame.DOUBLEBUF)
+        self.__background_color = background_color
         
-    
-    def __configure_window(self):
-        return pygame.display.set_mode((self.__tam_x, self.__tam_y))
-    
-    def show_window(self):
-        screen = self.__configure_window()
-        screen.fill(self.__color_display)
+    def set_pixel(self, x, y, color):
+        x = x + 1
+        y = y + 1
+        if x < 1:
+            x = 1
+        if y < 1:
+            y = 1
+        if x > self.__screen.get_width():
+            x = self.__screen.get_width()
+        if y > self.__screen.get_height():
+            y = self.__screen.get_height()
+        self.__screen.set_at((x,y),color.get_rgba())
 
-    def set_pixel(self, coord_x, coord_y, color):
-        pass
+        #self.__screen.set_at((x,y),color.get_rgba())
+    
+    def senoide(self):
+        for x in range(self.__screen.get_width()-1):
+            y = (self.__screen.get_height()/2)+5*numpy.sin(x*0.2)
+            y = int(y)
+            self.set_pixel(x, y, Color(255,255,255))
+
+    def clear_screen(self):
+        self.__screen.fill(self.__background_color.get_rgba())
+        
+    def update(self):
+        pygame.display.update()
 
 
 class Color:
-    def __init__(self, red, green, blue, transparency = False) -> None:
-        if (-1 < red < 255 or -1 < green < 255 or -1 < blue < 255):
-            self.__red
-            self.__green = green
-            self.__blue = blue
-            self.__transparency = transparency
-        else:
-            return (0, 0, 0)
+    def __init__(self, red, green, blue, alpha = 0):
+        self.__red = red
+        self.__green = green
+        self.__blue = blue
+        self.__alpha = alpha
 
-    @staticmethod
-    def getRGB(self):
-        return (self.__red, self.__green, self.__blue)
+    def get_rgba(self):
+        return (self.__red, self.__green, self.__blue, self.__alpha)
 
-    
-# create Pygame surface with dimensions 100x100
-screen = Screen(100,100, Color(100,200,255).getRGB())
 
-# Start the main loop
-running = True
-while running:
-    # handle events
+largura, altura, background_color = 200, 200, Color(0,0,0)
+
+while True:
+    pygame.init()
+    screen = Screen(largura, altura, background_color)
+    clock = pygame.time.Clock()
     for event in pygame.event.get():
-
-
-
         if event.type == pygame.QUIT:
-            # if the user closes the window, quit the loop
-            running = False
+            pygame.quit()
+            break
+        
+    screen.set_pixel(50, 50, Color(255, 255, 0))
+    screen.senoide()
 
-    # update the display
-    pygame.display.update()
-
-# quit Pygame gracefully
-pygame.quit()
+    screen.update()
+    clock.tick(30)

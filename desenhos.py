@@ -5,17 +5,20 @@ import time
 
 class Screen:
     def __init__(self, width, height, background_color):
-        self.__screen = [background_color]*
+        self.__screen_matrix = []
+        for i in range(height):
+            self.__screen_matrix.append([0]*width)
         self.__background_color = background_color
-
+        self.__width = width
+        self.__height = height
+        self.__screen = pygame.display.set_mode((self.__width, self.__height), pygame.RESIZABLE)
 
     # Esse método serve para tratar coordenadas que podem ser maiores que o tamanho
     # da matriz. Portanto, em C++, acessaria lixo na mémória. O set_at do python
     # da lib pygame também deve tratar, mas por precaução, estou fazendo aqui
     # também, como forma didática.
-    def show_image_display(self):
-        #pygame.display.set_mode((width, height), pygame.RESIZABLE)
-        pass
+    def get_screen(self):
+        return self.__screen
 
     def set_pixel(self, x, y, color):
         x = x + 1
@@ -61,19 +64,27 @@ class Screen:
                     # TODO: Erro ao multiplicar float com classe Color. O que fazer?
                     # Preciso reduzir em % de acordo com a intensidade da cor cada cor para o antiserrilhado.
 
-                    color_serrilhado_1 = Color(round((1-y_decimal)*red), round((1-y_decimal)*green), round((1-y_decimal)*blue), alpha)
-                    color_serrilhado_2 = Color(round((y_decimal)*red), round((y_decimal)*green), round((y_decimal)*blue), alpha)
-                    
-                    self.set_pixel(int(round(x)), int(np.floor(y)), color_serrilhado_1)
-                    self.set_pixel(int(round(x)), int(np.floor(y+1)), color_serrilhado_2)
+                    color_serrilhado_1 = Color(round(
+                        (1-y_decimal)*red), round((1-y_decimal)*green), round((1-y_decimal)*blue), alpha)
+                    color_serrilhado_2 = Color(
+                        round((y_decimal)*red), round((y_decimal)*green), round((y_decimal)*blue), alpha)
+
+                    self.set_pixel(int(round(x)), int(
+                        np.floor(y)), color_serrilhado_1)
+                    self.set_pixel(int(round(x)), int(
+                        np.floor(y+1)), color_serrilhado_2)
                 else:
                     x_decimal = x - np.floor(x)
 
-                    color_serrilhado_1 = Color(round((1-x_decimal)*red), round((1-x_decimal)*green), round((1-x_decimal)*blue), alpha)
-                    color_serrilhado_2 = Color(round((x_decimal)*red), round((x_decimal)*green), round((x_decimal)*blue), alpha)
-                    
-                    self.set_pixel(int(np.floor(x)), int(round(y)), color_serrilhado_1)
-                    self.set_pixel(int(np.floor(x+1)), int(round(y)), color_serrilhado_2)
+                    color_serrilhado_1 = Color(round(
+                        (1-x_decimal)*red), round((1-x_decimal)*green), round((1-x_decimal)*blue), alpha)
+                    color_serrilhado_2 = Color(
+                        round((x_decimal)*red), round((x_decimal)*green), round((x_decimal)*blue), alpha)
+
+                    self.set_pixel(int(np.floor(x)), int(
+                        round(y)), color_serrilhado_1)
+                    self.set_pixel(int(np.floor(x+1)),
+                                   int(round(y)), color_serrilhado_2)
             else:
                 self.set_pixel(x, y, color)
 
@@ -110,19 +121,19 @@ class Color:
 WINDOW_WIDTH = 100
 WINDOW_HEIGHT = 100
 
-screen = Screen(WINDOW_WIDTH, WINDOW_HEIGHT, Color(0, 0, 255))
-
+screen_object = Screen(WINDOW_WIDTH, WINDOW_HEIGHT, Color(255, 255, 255))
+screen = screen_object.get_screen()
 while True:
     clock = pygame.time.Clock()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             break
-        
-    screen.clear_screen()
-    screen.set_pixel(50, 50, Color(255, 0, 0, 50))
-    #screen.senoide()
-    screen.reta_DDA(20,200,100,170,Color(255,0,0,50), True)
 
-    screen.update()
+    screen_object.clear_screen()
+    screen_object.set_pixel(50, 50, Color(255, 0, 0, 50))
+    # screen.senoide()
+    screen_object.reta_DDA(20, 200, 100, 170, Color(255, 0, 0, 50), True)
+
+    screen_object.update()
     clock.tick(60)

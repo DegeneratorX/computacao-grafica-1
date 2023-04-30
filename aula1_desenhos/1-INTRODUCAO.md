@@ -59,3 +59,31 @@ Perceba que os pontos em azul na tela são pontos centrais dos pixels e o ponto 
 E a partir disso, farei os cálculos para achar as fórmulas que Bresenham descobriu que é aplicável ao algoritmo.
 
 ![](2023-04-28-17-26-13.png)
+
+Para achar o $P_0$ inicial, basta:
+
+![](2023-04-28-20-40-22.png)
+
+O que me importa aqui é o formato da reta. Não me importa as coordenadas. E por isso posso fazer uma reta partindo da origem. Ou seja, com $b = 0$, e $y_0 = x_0 = 0$.
+
+Portanto, $P$ é o cara que vai decidir se o pixel será pintado mais pra cima ou mais pra baixo, pois é definido como a diferença de distâncias de um centro real de um pixel para outro. Assim, vou incrementando em $x$ e em $y$ (como se fossem passos), e ai vou decidindo a partir do $P$. Na próxima iteração, ficará a cargo de $P$ se é maior, igual ou menor que 0 para saber onde colocar.
+
+## Reta DDA com Antialiasing
+
+### TODO
+
+## Circunferência e Elipse
+
+O desenho da circunferência, de inicio a se pensar, poderia ser feito definindo um raio $r$, e os passos como sendo cada grau do ângulo.
+
+![](2023-04-29-09-28-56.png)
+
+E como eu quero iterar sobre x (cos) até 45°, eu sempre calculo para cada grau o $\cos 1, \cos 2, ... , \cos 90$, e depois desenho o resto de forma simétrica.
+
+O problema é que dependendo do raio e da resolução da tela, o desenho da circunferência ficará quebrado, pois o arco da circunferência próxima do ponto de origem tem um comprimento menor do que o arco da circunferência mais distante, considerando ambos os arcos com mesmo ângulo. E portanto, pular de 1 em 1 grau teria diferentes comportamento. 1 grau pode resolver para resoluções ou raio baixos, mas 1 grau é muito grande para resoluções ou raio altos, ocasionando em quebra de pixel.
+
+Uma alternativa é o uso de **polígonos circunscritos** na circunferência. Infelizmente como os computadores não computam infinitos, então não podemos fazer o ângulo tender a zero a cada passo, e por isso nunca a circunferência vai ser perfeita. E isso é feito até nos dias de hoje com modelos 3D, e quanto mais vértices o polígono circunscrito tiver, mais pesado ficará o processamento.
+
+Apesar da técnica do polígono circunscrito ser uma técnica muito eficiente para 3D, ela já não faz muito sentido para 2D, já que o custo de processamento de polígonos em áreas 2D são muito menores. Uma alternativa para o 2D é recorrer a equação da circunferência $x^2 + y^2 = raio^2 \implies y = \sqrt{r^2 - x^2}$. O problema dessa equação é que precisaremos decidir incrementar em X e calcular o Y ou incrementar o Y e calcular em X dado o ângulo maior que 45°.
+
+Para a circunferência, é possível utilizar tanto a reta DDA quanto a reta Bresenham, mas a reta Bresenham é mais eficiente, pois evita trabalhar com números flutuantes.

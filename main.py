@@ -240,12 +240,17 @@ class Screen:
 
         # Procuro guardar o x anterior igual como no alg da senóide. No caso começo o desenho em x_origem+raio.
         x_anterior = x_origem + raio
-        y_anterior = y_origem # E começo no y de origem. Ou seja, no primeiro quadrante, é 0° que começo.
-        for iterador_em_x in range(raio, -2, -1): # Percorro em x do raio até -2 (-2 é gambiarra pra fechar o circulo), dando passo pra trás (-1)
-            x = x_origem + iterador_em_x # E vou percorrendo em x
-            y = -np.sqrt(abs(raio**2 - (x - x_origem)**2)) + y_origem # Ao mesmo tempo que produzo um resultado em y
-            self.reta_DDA(x_anterior, y_anterior, x, int(y), color) # vou desenhando ponto por ponto no percorrimento
-            x_anterior = x # E assim passo o atual para o anterior, e vou desenhadno retas minúsculas aos poucos.
+        # E começo no y de origem. Ou seja, no primeiro quadrante, é 0° que começo.
+        y_anterior = y_origem
+        # Percorro em x do raio até -2 (-2 é gambiarra pra fechar o circulo), dando passo pra trás (-1)
+        for iterador_em_x in range(raio, -2, -1):
+            x = x_origem + iterador_em_x  # E vou percorrendo em x
+            # Ao mesmo tempo que produzo um resultado em y
+            y = -np.sqrt(abs(raio**2 - (x - x_origem)**2)) + y_origem
+            # vou desenhando ponto por ponto no percorrimento
+            self.reta_DDA(x_anterior, y_anterior, x, int(y), color)
+            # E assim passo o atual para o anterior, e vou desenhadno retas minúsculas aos poucos.
+            x_anterior = x
             y_anterior = int(y)
 
         # 2° Quadrante
@@ -278,45 +283,77 @@ class Screen:
             x_anterior = x
             y_anterior = int(y)
 
+    # Algoritmo parecido com a circunferência, porém acima de 45°, ele precisa iterar em y e desenhar em x.
+    # a = altura da elipse. b = largura da elipse
     def elipse(self, x_origem, y_origem, a, b, color):
+        if abs(a) >= abs(b):  # Se ângulo é maior ou igual a 45°
+            b_menor_que_a = True
+            self.__desenha_quadrante_elipse(b_menor_que_a, x_origem, y_origem, a, b, color, 1, -1)
+            self.__desenha_quadrante_elipse(b_menor_que_a, x_origem, y_origem, a, b, color, -1, -1)
+            self.__desenha_quadrante_elipse(b_menor_que_a, x_origem, y_origem, a, b, color, -1, 1)
+            self.__desenha_quadrante_elipse(b_menor_que_a, x_origem, y_origem, a, b, color, 1, 1)
+        else:  # Se ângulo é menor que 45°
+            b_menor_que_a = False
+            self.__desenha_quadrante_elipse(b_menor_que_a, x_origem, y_origem, a, b, color, 1, -1)
+            self.__desenha_quadrante_elipse(b_menor_que_a, x_origem, y_origem, a, b, color, -1, -1)
+            self.__desenha_quadrante_elipse(b_menor_que_a, x_origem, y_origem, a, b, color, -1, 1)
+            self.__desenha_quadrante_elipse(b_menor_que_a, x_origem, y_origem, a, b, color, 1, 1)
 
-        x_anterior = x_origem + b
-        y_anterior = y_origem
-        for iterador_em_x in range(b, -2, -1):
-            x = x_origem + iterador_em_x
-            y = -np.sqrt(abs((b**2*(a-(x - x_origem))*(a+(x - x_origem)))/a**2)) + y_origem
-            self.reta_DDA(x_anterior, y_anterior, x, int(y), color)
-            x_anterior = x
-            y_anterior = int(y)
+    def __desenha_quadrante_elipse(self, b_menor_que_a, x_origem, y_origem, a, b, color, sinal_x, sinal_y):
+        if b_menor_que_a:
+            x_anterior = x_origem + sinal_x * b
+            y_anterior = y_origem
+            for iterador_em_x in range(b, -2, -1):
+                x = x_origem + sinal_x * iterador_em_x
+                y = sinal_y * np.sqrt(abs(a*a - (a*a)/(b*b) * (x - x_origem)
+                                    * (x - x_origem))) + y_origem
+                self.reta_DDA(x_anterior, y_anterior, x, int(y), color)
+                x_anterior = x
+                y_anterior = int(y)
+        else:
+            x_anterior = x_origem
+            y_anterior = y_origem + sinal_y * a
+            for iterador_em_y in range(int(a), -2, -1):
+                y = y_origem + sinal_y * iterador_em_y
+                x = sinal_x * np.sqrt(abs(b*b - (b*b)/(a*a) * (y - y_origem)
+                                 * (y - y_origem))) + x_origem
+                self.reta_DDA(x_anterior, y_anterior, int(x), y, color)
+                x_anterior = int(x)
+                y_anterior = y
 
 
     # Uso não recomendado/depreciado (causa estouro na call stack dependendo do tamanho do preenchimento)
-    def flood_fill_recursivo(self, x_setar, y_setar, cor_nova, cor_inicial, primeira_vez_executando = True):
+
+    def flood_fill_recursivo(self, x_setar, y_setar, cor_nova, cor_inicial, primeira_vez_executando=True):
         if self.get_pixel(x_setar, y_setar) == cor_nova:
             if primeira_vez_executando:
                 self.set_pixel(x_setar, y_setar, cor_nova)
             return
 
         self.set_pixel(x_setar, y_setar, cor_nova)
-        self.flood_fill_recursivo(x_setar, y_setar-1, cor_nova, cor_inicial, False)
-        self.flood_fill_recursivo(x_setar+1, y_setar, cor_nova, cor_inicial, False)
-        self.flood_fill_recursivo(x_setar, y_setar+1, cor_nova, cor_inicial, False)
-        self.flood_fill_recursivo(x_setar-1, y_setar, cor_nova, cor_inicial, False)
-
+        self.flood_fill_recursivo(
+            x_setar, y_setar-1, cor_nova, cor_inicial, False)
+        self.flood_fill_recursivo(
+            x_setar+1, y_setar, cor_nova, cor_inicial, False)
+        self.flood_fill_recursivo(
+            x_setar, y_setar+1, cor_nova, cor_inicial, False)
+        self.flood_fill_recursivo(
+            x_setar-1, y_setar, cor_nova, cor_inicial, False)
 
     # Dados guardados na heap. É o indicado para uso.
     def flood_fill_iterativo(self, x_setar, y_setar, cor_nova):
 
         # Capturo a cor que cliquei
         cor_inicial = self.get_pixel(x_setar, y_setar)
-        if cor_inicial == cor_nova: # Se for a mesma cor que quero colocar, faz nada.
+        if cor_inicial == cor_nova:  # Se for a mesma cor que quero colocar, faz nada.
             self.set_pixel(x_setar, y_setar, cor_nova)
             return
 
         pilha = [(x_setar, y_setar)]
         while pilha:
             x, y = pilha.pop()
-            if self.get_pixel(x, y) != cor_inicial: # Se a cor detectada do próximo da pilha for diferente, para o preenchimento.
+            # Se a cor detectada do próximo da pilha for diferente, para o preenchimento.
+            if self.get_pixel(x, y) != cor_inicial:
                 continue
             # Se não, preenche com pixel
             self.set_pixel(x, y, cor_nova)
@@ -340,32 +377,33 @@ class Screen:
     def clear_screen(self):
         self.__screen.fill(self.__background_color.get_rgba())
 
-    def update(self):
+    @staticmethod
+    def update():
         pygame.display.update()
 
 
 class Color:
 
     def __init__(self, red, green, blue, alpha=255):
-        if (-1 < red < 256):
+        if -1 < red < 256:
             self.__red = red
         else:
             self.__red = 0
-        if (-1 < green < 256):
+        if -1 < green < 256:
             self.__green = green
         else:
             self.__green = 0
-        if (-1 < blue < 256):
+        if -1 < blue < 256:
             self.__blue = blue
         else:
             self.__blue = 0
-        if (-1 < alpha < 256):
+        if -1 < alpha < 256:
             self.__alpha = alpha
         else:
             self.__alpha = 255
 
     def get_rgba(self):
-        return (self.__red, self.__green, self.__blue, self.__alpha)
+        return self.__red, self.__green, self.__blue, self.__alpha
 
 
 WINDOW_WIDTH = 1280
@@ -387,9 +425,9 @@ while True:
     # screen_object.reta_tradicional(20, 200, 100, 170, Color(255, 0, 0, 50))
     # screen_object.reta_DDA(20, 200, 100, 170, Color(255, 0, 0, 50), True)
     # screen_object.reta_bresenham(20, 200, 100, 170, Color(255, 0, 0, 50))
-    screen_object.set_pixel(600,325,Color(255,255,0))
-    #screen_object.circunferencia(400, 325, 50, Color(255, 0, 0, 50))
-    screen_object.elipse(600, 325, 50, 40, Color(255, 0, 0, 50))
-    #screen_object.flood_fill_iterativo(600, 325, Color(255, 0, 255, 50))
+    screen_object.set_pixel(600, 325, Color(255, 255, 0))
+    # screen_object.circunferencia(400, 325, 50, Color(255, 0, 0, 50))
+    screen_object.elipse(600, 325, 100, 200, Color(255, 0, 0, 50))
+    # screen_object.flood_fill_iterativo(600, 325, Color(255, 0, 255, 50))
     screen_object.update()
     clock.tick(60)

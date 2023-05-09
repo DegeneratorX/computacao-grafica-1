@@ -84,6 +84,10 @@ O problema é que dependendo do raio e da resolução da tela, o desenho da circ
 
 Uma alternativa é o uso de **polígonos circunscritos** na circunferência. Infelizmente como os computadores não computam infinitos, então não podemos fazer o ângulo tender a zero a cada passo, e por isso nunca a circunferência vai ser perfeita. E isso é feito até nos dias de hoje com modelos 3D, e quanto mais vértices o polígono circunscrito tiver, mais pesado ficará o processamento.
 
-Apesar da técnica do polígono circunscrito ser uma técnica muito eficiente para 3D, ela já não faz muito sentido para 2D, já que o custo de processamento de polígonos em áreas 2D são muito menores. Uma alternativa para o 2D é recorrer a equação da circunferência $x^2 + y^2 = raio^2 \implies y = \sqrt{r^2 - x^2}$. O problema dessa equação é que precisaremos decidir incrementar em X e calcular o Y ou incrementar o Y e calcular em X dado o ângulo maior que 45°.
+Apesar da técnica do polígono circunscrito ser uma técnica muito eficiente para 3D, ela já não faz muito sentido para 2D, já que o custo de processamento de polígonos em áreas 2D são muito menores. Uma alternativa para o 2D é recorrer a equação da circunferência $x^2 + y^2 = raio^2 \implies y = \sqrt{r^2 - x^2}$. O problema dessa equação é que precisaremos fazer para cada quadrante o desenho.
 
-Para a circunferência, é possível utilizar tanto a reta DDA quanto a reta Bresenham, mas a reta Bresenham é mais eficiente, pois evita trabalhar com números flutuantes.
+Para a circunferência, é possível utilizar tanto a reta DDA quanto a reta Bresenham, mas a reta Bresenham é mais eficiente, pois evita trabalhar com números flutuantes. Porém, eu particulamente obtive sucesso imediato com a reta DDA, então usarei ela.
+
+Sobre a Elipse, a forma como se faz é muito semelhante, e os métodos de elipse e circunferência estão no arquivo main.py. Na elipse é preciso levar em consideração se o ângulo com que se está trabalhando é maior ou menor que 45°, baseado no tamanho de $a$ e $b$.
+
+## 

@@ -75,7 +75,8 @@ class Poligono(Desenho):
 
     def losango(origem, lado, color):
         pass
-
+    
+    # TODO
     @staticmethod
     def pentagono_equilatero(origem, lado, color):
         base = lado * np.sqrt(5-2*np.sqrt(5))/2
@@ -85,7 +86,8 @@ class Poligono(Desenho):
             [origem+lado/2, origem-altura/2],
             [origem-lado/2, origem-altura/2],
         ]
-
+    
+    # TODO
     @staticmethod
     def hexagono_equilatero(origem, lado, color):
         pass

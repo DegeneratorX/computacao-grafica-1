@@ -2,6 +2,7 @@ import pygame
 from desenho import *
 from poligono import *
 
+
 def main():
 
     WINDOW_WIDTH = 1280
@@ -21,7 +22,7 @@ def main():
         # screen_object.senoide_sem_distorcao(Color(255, 0, 0, 50))
         # screen_object.senoide_com_distorcao(Color(255, 0, 0, 50))
         # screen_object.reta_tradicional(20, 200, 100, 170, Color(255, 0, 0, 50))
-        screen_object.reta_DDA(20, 200, 100, 170, Color(255, 0, 0, 0), True)
+        Desenho.reta_DDA(20, 200, 100, 170, Color(255, 0, 0, 0), False)
         # screen_object.reta_bresenham(20, 200, 100, 170, Color(255, 0, 0, 50))
         # screen_object.set_pixel(600, 325, Color(255, 255, 0))
         # screen_object.circunferencia(400, 325, 50, Color(255, 0, 0, 50))

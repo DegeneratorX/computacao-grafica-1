@@ -1,6 +1,7 @@
 import pygame
 from desenho import *
 from poligono import *
+from screen import *
 
 
 def main():
@@ -18,16 +19,16 @@ def main():
                 break
 
         screen_object.clear_screen()
-        # screen_object.set_pixel(50, 100, Color(255, 0, 0, 50))
-        # screen_object.senoide_sem_distorcao(Color(255, 0, 0, 50))
-        # screen_object.senoide_com_distorcao(Color(255, 0, 0, 50))
-        # screen_object.reta_tradicional(20, 200, 100, 170, Color(255, 0, 0, 50))
-        Desenho.reta_DDA(20, 200, 100, 170, Color(255, 0, 0, 0), False)
-        # screen_object.reta_bresenham(20, 200, 100, 170, Color(255, 0, 0, 50))
-        # screen_object.set_pixel(600, 325, Color(255, 255, 0))
-        # screen_object.circunferencia(400, 325, 50, Color(255, 0, 0, 50))
-        # screen_object.elipse(600, 325, 100, 200, Color(255, 0, 0, 50))
-        # screen_object.flood_fill_iterativo(600, 325, Color(255, 0, 255, 50))
+        desenhar_na_screen = Desenho(screen_object)
+        bloco = Poligono.bloco(200, 200, 16)
+        desenhar_na_screen.desenha_poligono(bloco, Color(255, 0, 0))
+        lista_poligono_custom = []
+        Poligono.insere_ponto(poligono_custom, 100, 400)
+        Poligono.insere_ponto(poligono_custom, 300, 250)
+        Poligono.insere_ponto(poligono_custom, 300, 500)
+        Poligono.insere_ponto(poligono_custom, 100, 400)
+        poligono_custom = Poligono(desenhar_na_screen, lista_poligono_custom, Color(0, 255,0))
+
         screen_object.update()
         clock.tick(60)
 

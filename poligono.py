@@ -1,84 +1,87 @@
-from desenho import Desenho
-from screen import Color
 import numpy as np
 
-class Poligono(Desenho):
-    def __init__(self, lista_poligono, color):
-        self.__lista_poligono = lista_poligono
-        self.desenhapoligono(color)
+class Poligono:
+    def __init__(self, desenhar_na_screen, lista_poligono_customizado, color):
+        self.__desenhar_na_screen = desenhar_na_screen
+        self.__desenhar_na_screen.desenha_poligono(lista_poligono_customizado, color)
 
     @staticmethod
-    def insere_ponto(poligono, x, y):
-        poligono.append([x, y])
-    
-    def desenhapoligono(self, color):
-        x = self.__lista_poligono[0][0]
-        y = self.__lista_poligono[0][1]
-        for i in range(1, len(self.__lista_poligono)):
-            self.reta_DDA(x, y, self.__lista_poligono[i][0], self.__lista_poligono[i][1], color)
-            x = self.__lista_poligono[i][1]
-            y = self.__lista_poligono[i][2]
-        self.reta_DDA(x, y, self.__lista_poligono[0][0], self.__lista_poligono[0][1], color)
+    def insere_ponto(lista_poligono, x, y):
+        lista_poligono.append([x, y])
 
     # Quadrado
     @staticmethod
-    def bloco(origem, lado, color):
-        pol = [
-            [origem-lado/2, origem+lado/2],
-            [origem+lado/2, origem+lado/2],
-            [origem+lado/2, origem-lado/2],
-            [origem-lado/2, origem-lado/2],
-        ]
-        return Poligono(pol, color)
+    def bloco(origem_x, origem_y, lado):
+        metade_lado = int(round(lado/2))
+        if lado%2 == 0:
+            lista_poligono = [
+                [origem_x-metade_lado, origem_y-metade_lado],
+                [origem_x+metade_lado-1, origem_y-metade_lado],
+                [origem_x+metade_lado-1, origem_y+metade_lado-1],
+                [origem_x-metade_lado, origem_y+metade_lado-1],
+            ]
+        else:
+            lista_poligono = [
+                [origem_x-metade_lado, origem_y-metade_lado],
+                [origem_x+metade_lado, origem_y-metade_lado],
+                [origem_x+metade_lado, origem_y+metade_lado],
+                [origem_x-metade_lado, origem_y+metade_lado],
+            ]
+        return lista_poligono
 
     # Triângulo retângulo metade de um quadrado
     @staticmethod
-    def meio_bloco(origem, lado, color):
-
-        pol = [
-            [origem-lado/2, origem+lado/2],
-            [origem+lado/2, origem-lado/2],
-            [origem-lado/2, origem-lado/2],
-        ]
-        return Poligono(pol, color)
+    def meio_bloco(origem_x, origem_y, lado):
+        metade_lado = int(round(lado/2))
+        if lado%2==0:
+            lista_poligono = [
+                [origem_x-metade_lado, origem_y+metade_lado-1],
+                [origem_x+metade_lado-1, origem_y-metade_lado],
+                [origem_x+metade_lado-1, origem_y+metade_lado-1],
+            ]
+        else:
+                [origem_x-metade_lado, origem_y+metade_lado],
+                [origem_x+metade_lado, origem_y-metade_lado],
+                [origem_x+metade_lado, origem_y+metade_lado],
+        return lista_poligono
 
     @staticmethod
-    def retangulo(origem, base, altura, color):
-        pol = [
+    def retangulo(origem, base, altura):
+        lista_poligono = [
             [origem-base/2, origem+altura/2],
             [origem+base/2, origem+altura/2],
             [origem+base/2, origem-altura/2],
             [origem-base/2, origem-altura/2],
         ]
-        return Poligono(pol, color)
+        return lista_poligono
 
     @staticmethod
-    def trapezio_simetrico(origem, base_maior, base_menor, altura, color):
-        pol = [
+    def trapezio_simetrico(origem, base_maior, base_menor, altura):
+        lista_poligono = [
             [origem-base_menor/2, origem+altura/2],
             [origem+base_menor/2, origem+altura/2],
             [origem+base_maior/2, origem-altura/2],
             [origem-base_maior/2, origem-altura/2],
         ]
-        return Poligono(pol, color)
+        return lista_poligono
 
     @staticmethod
-    def triangulo_equilatero(origem, lado, color):
+    def triangulo_equilatero(origem, lado):
         altura = (np.sqrt(3)/2)*lado
-        pol = [
+        lista_poligono = [
             [origem-lado/2, origem+altura/2],
             [origem+lado/2, origem+altura/2],
             [origem+lado/2, origem-altura/2],
             [origem-lado/2, origem-altura/2],
         ]
-        return Poligono(pol, color)
+        return lista_poligono
 
-    def losango(origem, lado, color):
+    def losango(origem, lado):
         pass
     
     # TODO
     @staticmethod
-    def pentagono_equilatero(origem, lado, color):
+    def pentagono_equilatero(origem, lado):
         base = lado * np.sqrt(5-2*np.sqrt(5))/2
         pol = [
             [origem-lado/2, origem+altura/2],
@@ -89,5 +92,5 @@ class Poligono(Desenho):
     
     # TODO
     @staticmethod
-    def hexagono_equilatero(origem, lado, color):
+    def hexagono_equilatero(origem, lado):
         pass

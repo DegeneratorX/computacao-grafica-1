@@ -1,10 +1,10 @@
 import numpy as np
-from screen import Screen, Color
+from screen import Color
 
-class Desenho(Screen):
+class Desenho:
 
-    def __init__(self, width, height, background_color):
-        super().__init__(width, height, background_color)
+    def __init__(self, screen):
+        self.__screen = screen
 
     def senoide_com_distorcao(self, color):
         # Para cada x que eu estiver
@@ -15,7 +15,7 @@ class Desenho(Screen):
                 100*np.sin(x*0.05)  # Função seno
             # Para cada y, pode gerar um float. Coverto pra inteiro.
             y = int(y)
-            self.set_pixel(x, y, color)
+            self.__screen.set_pixel(x, y, color)
 
     def senoide_sem_distorcao(self, color):
         # Defino o ponto inicial
@@ -42,7 +42,7 @@ class Desenho(Screen):
 
         # Se a reta não for de fato variável, é um ponto
         if delta_x == 0 and delta_y == 0:
-            self.set_pixel(x_inicial, y_inicial, color)
+            self.__screen.set_pixel(x_inicial, y_inicial, color)
 
         # Preciso saber se o ângulo é maior que 45 graus. Se for, troco as
         # variáveis x e y. Obviamente se a altura (y) for maior que a largura (x),
@@ -64,9 +64,9 @@ class Desenho(Screen):
 
             # Finalmente coloco.
             if not trocou:
-                self.set_pixel(x, y, color)
+                self.__screen.set_pixel(x, y, color)
             else:
-                self.set_pixel(y, x, color)
+                self.__screen.set_pixel(y, x, color)
 
     def reta_DDA(self, x_inicial, y_inicial, x_final, y_final, color, antialiasing=False):
         delta_x = x_final-x_inicial
@@ -80,7 +80,7 @@ class Desenho(Screen):
             passos = abs(delta_y)
         # pygame.display.update()
         if passos == 0:
-            self.set_pixel(x_inicial, y_inicial, color)
+            self.__screen.set_pixel(x_inicial, y_inicial, color)
             return
 
         # Quantidade de passos que eu vou dar em x e em y, em porcentagem.
@@ -110,9 +110,9 @@ class Desenho(Screen):
                     color_serrilhado_2 = Color(
                         round((y_decimal)*red), round((y_decimal)*green), round((y_decimal)*blue), alpha)
 
-                    self.set_pixel(int(round(x)), int(
+                    self.__screen.set_pixel(int(round(x)), int(
                         np.floor(y)), color_serrilhado_1)
-                    self.set_pixel(int(round(x)), int(
+                    self.__screen.set_pixel(int(round(x)), int(
                         np.floor(y+1)), color_serrilhado_2)
                 else:
                     x_decimal = x - np.floor(x)
@@ -122,13 +122,13 @@ class Desenho(Screen):
                     color_serrilhado_2 = Color(
                         round((x_decimal)*red), round((x_decimal)*green), round((x_decimal)*blue), alpha)
 
-                    self.set_pixel(int(np.floor(x)), int(
+                    self.__screen.set_pixel(int(np.floor(x)), int(
                         round(y)), color_serrilhado_1)
-                    self.set_pixel(int(np.floor(x+1)),
+                    self._screen.set_pixel(int(np.floor(x+1)),
                                    int(round(y)), color_serrilhado_2)
 
             else:
-                self.set_pixel(x, y, color)
+                self.__screen.set_pixel(x, y, color)
 
     def reta_bresenham(self, x_inicial, y_inicial, x_final, y_final, color):
         delta_x = x_final - x_inicial
@@ -155,7 +155,7 @@ class Desenho(Screen):
             p = -abs(delta_x) + (2*abs(delta_y))
 
             for i in range(round(abs(delta_x))):
-                self.set_pixel(round(x), round(y), color)
+                self.__screen.set_pixel(round(x), round(y), color)
 
                 # Incremento (ou decremento, depende do fator) em x
                 x = x + fator_multiplicativo_x
@@ -171,7 +171,7 @@ class Desenho(Screen):
             p = -delta_y + (2 * abs(delta_x))
 
             for i in range(abs(delta_y)):
-                self.set_pixel(round(x), round(y), color)
+                self.__screen.set_pixel(round(x), round(y), color)
 
                 y = y + fator_multiplicativo_y
                 if p >= 0:
@@ -279,12 +279,12 @@ class Desenho(Screen):
     # Uso não recomendado/depreciado (causa estouro na call stack dependendo do tamanho do preenchimento)
 
     def flood_fill_recursivo(self, x_setar, y_setar, cor_nova, cor_inicial, primeira_vez_executando=True):
-        if self.get_pixel(x_setar, y_setar) == cor_nova:
+        if self.__screen.get_pixel(x_setar, y_setar) == cor_nova:
             if primeira_vez_executando:
-                self.set_pixel(x_setar, y_setar, cor_nova)
+                self.__screen.set_pixel(x_setar, y_setar, cor_nova)
             return
 
-        self.set_pixel(x_setar, y_setar, cor_nova)
+        self.__screen.set_pixel(x_setar, y_setar, cor_nova)
         self.flood_fill_recursivo(
             x_setar, y_setar-1, cor_nova, cor_inicial, False)
         self.flood_fill_recursivo(
@@ -296,21 +296,20 @@ class Desenho(Screen):
 
     # Dados guardados na heap. É o indicado para uso.
     def flood_fill_iterativo(self, x_setar, y_setar, cor_nova):
-
         # Capturo a cor que cliquei
-        cor_inicial = self.get_pixel(x_setar, y_setar)
+        cor_inicial = self.__screen.get_pixel(x_setar, y_setar)
         if cor_inicial == cor_nova:  # Se for a mesma cor que quero colocar, faz nada.
-            self.set_pixel(x_setar, y_setar, cor_nova)
+            self.__screen.set_pixel(x_setar, y_setar, cor_nova)
             return
 
         pilha = [(x_setar, y_setar)]
         while pilha:
             x, y = pilha.pop()
             # Se a cor detectada do próximo da pilha for diferente, para o preenchimento.
-            if self.get_pixel(x, y) != cor_inicial:
+            if self.__screen.get_pixel(x, y) != cor_inicial:
                 continue
             # Se não, preenche com pixel
-            self.set_pixel(x, y, cor_nova)
+            self.__screen.set_pixel(x, y, cor_nova)
 
             # Verifico pra onde vai os próximos pixels, esquerda, direita, cima e baixo.
             if y > 0:
@@ -325,3 +324,12 @@ class Desenho(Screen):
                 pilha.append((x, y))
             if y == 0:
                 pilha.append((x, y))
+    
+    def desenha_poligono(self, lista_poligono, color):
+        x = lista_poligono[0][0]
+        y = lista_poligono[0][1]
+        for i in range(1, len(lista_poligono)):
+            self.reta_DDA(x, y, lista_poligono[i][0], lista_poligono[i][1], color)
+            x = lista_poligono[i][0]
+            y = lista_poligono[i][1]
+        self.reta_DDA(x, y, lista_poligono[0][0], lista_poligono[0][1], color)

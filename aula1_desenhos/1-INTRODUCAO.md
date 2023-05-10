@@ -72,6 +72,7 @@ Portanto, $P$ é o cara que vai decidir se o pixel será pintado mais pra cima o
 
 ### TODO
 
+
 ## Circunferência e Elipse
 
 O desenho da circunferência, de inicio a se pensar, poderia ser feito definindo um raio $r$, e os passos como sendo cada grau do ângulo.

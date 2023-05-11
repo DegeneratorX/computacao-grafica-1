@@ -333,3 +333,30 @@ class Desenho:
             x = lista_poligono[i][0]
             y = lista_poligono[i][1]
         self.reta_DDA(x, y, lista_poligono[0][0], lista_poligono[0][1], color)
+
+    def __intersecao(y_da_scanline, segmento_de_reta):
+        x_inicial, y_inicial, x_final, y_final = segmento_de_reta[0][0], segmento_de_reta[0][1], segmento_de_reta[1][0], segmento_de_reta[1][1]
+        
+        # Se o segmento de reta for horizontal, não tem interseção (ou interseção infinita)
+        if y_inicial == y_final:
+            return None
+
+        # Se a orientação da reta for de baixo pra cima, troca temporariamente
+        if y_inicial > y_final:
+            x_inicial, x_final = x_final, x_inicial
+            y_inicial, y_final = y_final, y_inicial
+
+        # Cálculo do t
+        t = (y_da_scanline - y_inicial)/(y_final - y_inicial)
+
+        # Cálculo da interseção para descobri o x que intersecciona a reta da scanline
+        # com a reta do polígono
+        if t > 0 and t <= 1:
+            x = x_inicial + t*(x_final - x_inicial)
+            return x
+        
+        return None
+    
+
+    def scanline():
+        pass

@@ -68,11 +68,6 @@ O que me importa aqui é o formato da reta. Não me importa as coordenadas. E po
 
 Portanto, $P$ é o cara que vai decidir se o pixel será pintado mais pra cima ou mais pra baixo, pois é definido como a diferença de distâncias de um centro real de um pixel para outro. Assim, vou incrementando em $x$ e em $y$ (como se fossem passos), e ai vou decidindo a partir do $P$. Na próxima iteração, ficará a cargo de $P$ se é maior, igual ou menor que 0 para saber onde colocar.
 
-## Reta DDA com Antialiasing
-
-### TODO
-
-
 ## Circunferência e Elipse
 
 O desenho da circunferência, de inicio a se pensar, poderia ser feito definindo um raio $r$, e os passos como sendo cada grau do ângulo.
@@ -91,4 +86,10 @@ Para a circunferência, é possível utilizar tanto a reta DDA quanto a reta Bre
 
 Sobre a Elipse, a forma como se faz é muito semelhante, e os métodos de elipse e circunferência estão no arquivo main.py. Na elipse é preciso levar em consideração se o ângulo com que se está trabalhando é maior ou menor que 45°, baseado no tamanho de $a$ e $b$.
 
-## 
+## Flood fill
+
+Flood fill é um algoritmo de desenho que preenche até encontrar uma borda. Existe a forma recursiva, que pode estourar a call stack, e a forma iterativa usando pilha na heap, que é mais seguro, mas ainda sim lento.
+
+## Polígonos
+
+Os polígonos nada mais são do que uma figura geométrica de 3 lados no mínimo. Para ligar pontos e fechar um polígono, é preciso pelo menos $n_{lados}+1$ elementos de uma lista que guarda as coordenadas (x,y). Ou seja, é uma matriz de tamanho $(n+1)$ x $(2)$ elementos.

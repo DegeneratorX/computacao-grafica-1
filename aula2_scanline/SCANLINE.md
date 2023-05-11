@@ -40,3 +40,4 @@ Veja, um problema ocorre ao interseccionar a scanline sobre um vértice. Se o po
 
 O que eu fiz aqui? Basicamente eu ignorei a interseção quando t for zero, que é quando a scanline passa por algum vértice inicial. Porém, isso quebra a outra exceção, que já estava bonitinha funcionando. Então para resolver de vez o problema, no próprio algoritmo de interseção, invertemos os valores $P_f$ e $P_i$ quando a construção da aresta do polígono for feita de baixo pra cima. Quando for de cima pra baixo, faz nada. Assim resolvemos o problema, pois sempre que tiver dois vértices coincidindo e a scanline precisa pintar horizontalmente, ela vai pintar sempre em 2 pontos finais, o que é perfeito para fazer pinturas em interseções 2 a 2.
 
+E sim, quando inverte $P_f$ com $P_i$, basicamente se eu tiver um $t = 0.3$ (30% da reta), ele passa a ser $t = 0.7$ (70% da reta).

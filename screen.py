@@ -22,7 +22,7 @@ class Screen:
     # da lib pygame também deve tratar, mas por precaução, estou fazendo aqui
     # também, como forma didática.
 
-    def get_pixel(self, x, y):
+    def get_pixel(self, x, y, textura):
         if x < 0:
             x = 0
         if y < 0:

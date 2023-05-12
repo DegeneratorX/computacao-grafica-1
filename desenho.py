@@ -334,7 +334,7 @@ class Desenho:
             y = lista_poligono[i][1]
         self.reta_DDA(x, y, lista_poligono[0][0], lista_poligono[0][1], color)
 
-    def __intersecao(y_da_scanline, segmento_de_reta):
+    def __intersecao(self, y_da_scanline, segmento_de_reta):
         x_inicial, y_inicial, x_final, y_final = segmento_de_reta[0][0], segmento_de_reta[0][1], segmento_de_reta[1][0], segmento_de_reta[1][1]
         
         # Se o segmento de reta for horizontal, não tem interseção (ou interseção infinita)
@@ -357,6 +357,42 @@ class Desenho:
         
         return None
     
+    def scanline_color(self, lista_poligono, color):
+            pf_y = lista_poligono[p][1]
+            x_i = round(self.__intersecao(y, ))
 
-    def scanline():
-        pass
+    def scanline_texture(self, lista_poligono, textura):
+        # Capturo o valor mínimo e máximo de y de um polígono na coluna dos "y" da matriz de polígonos
+        # Com esses valores, consigo determinar a altura total do polígono e saber por onde a scanline
+        # deve varrer em posições y (entre y_minimo e y_maximo)
+        y_minimo = min(coluna[1] for coluna in lista_poligono)
+        y_maximo = min(coluna[1] for coluna in lista_poligono)
+
+        for y in range(y_minimo, y_maximo):
+            i = []
+            ponto_inicial = lista_poligono[0]
+            for p in range(1, len(lista_poligono)):
+                ponto_final = lista_poligono[p]
+                ponto_intersecao = self.__intersecao(y, [ponto_inicial, ponto_final])
+                if ponto_inicial[0] >= 0:
+                    i.append(ponto_intersecao)
+                ponto_inicial = ponto_final
+            ponto_final = lista_poligono[0]
+            ponto_intersecao = self.__intersecao(y, [ponto_inicial, ponto_final])
+
+            if ponto_inicial[0] >= 0:
+                i.append[ponto_intersecao]
+
+            for ponto_inicial in range(0, len(i), 2):
+                ponto_1 = i[ponto_inicial]
+                ponto_2 = i[ponto_inicial+1]
+                x_1 = ponto_1[0]
+                x_2 = ponto_2[0]
+                if x_2 < x_1:
+                    ponto_2, ponto_1 = ponto_1, ponto_2
+                for x_k in range(round(ponto_1[0]), round(ponto_2[0])+1):
+                    pc = (x_k - ponto_1[0])/(ponto_2[0] - ponto_1[0])
+                    t_x = ponto_1[2] + pc * (ponto_2[2] - ponto_2[2])
+                    t_y = ponto_1[3] + pc * (ponto_2[3] - ponto_1[3])
+                    color = self.__screen.get_pixel(t_x, t_y, textura)
+                    self.__screen.set_pixel(x_k, y, color)

@@ -1,13 +1,17 @@
 import numpy as np
 
 class Poligono:
-    def __init__(self, desenhar_na_screen, lista_poligono_customizado, color):
-        self.__desenhar_na_screen = desenhar_na_screen
-        self.__desenhar_na_screen.desenha_poligono(lista_poligono_customizado, color)
+    def __init__(self, lista_poligono_customizado=None):
+        if lista_poligono_customizado is None:
+            lista_poligono_customizado = []
+        self.__lista_poligono_customizado = lista_poligono_customizado
 
-    @staticmethod
-    def insere_ponto(lista_poligono, x, y):
-        lista_poligono.append([x, y])
+    @property
+    def lista_poligono_customizado(self):
+        return self.__lista_poligono_customizado
+
+    def insere_ponto(self, x, y):
+        self.__lista_poligono_customizado.append([x, y])
 
     # Quadrado
     @staticmethod

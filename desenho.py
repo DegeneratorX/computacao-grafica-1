@@ -325,7 +325,7 @@ class Desenho:
             if y == 0:
                 pilha.append((x, y))
     
-    def desenha_poligono(self, lista_poligono, color):
+    def desenha_poligono(self, lista_poligono, color, scanline_color=None):
         x = lista_poligono[0][0]
         y = lista_poligono[0][1]
         for i in range(1, len(lista_poligono)):
@@ -333,13 +333,15 @@ class Desenho:
             x = lista_poligono[i][0]
             y = lista_poligono[i][1]
         self.reta_DDA(x, y, lista_poligono[0][0], lista_poligono[0][1], color)
+        if scanline_color is not None:
+            self.scanline_com_color(lista_poligono, scanline_color)
 
     def __intersecao(self, y_da_scanline, segmento_de_reta):
         x_inicial, y_inicial, x_final, y_final = segmento_de_reta[0][0], segmento_de_reta[0][1], segmento_de_reta[1][0], segmento_de_reta[1][1]
         
         # Se o segmento de reta for horizontal, não tem interseção (ou interseção infinita)
         if y_inicial == y_final:
-            return None
+            return -1
 
         # Se a orientação da reta for de baixo pra cima, troca temporariamente
         if y_inicial > y_final:
@@ -351,20 +353,83 @@ class Desenho:
 
         # Cálculo da interseção para descobri o x que intersecciona a reta da scanline
         # com a reta do polígono
-        if t > 0 and t <= 1:
+        if 0 < t <= 1:
             x = x_inicial + t*(x_final - x_inicial)
             return x
         
-        return None
+        return -1
     
-    def scanline_color(self, lista_poligono, color):
-            pf_y = lista_poligono[p][1]
-            x_i = round(self.__intersecao(y, ))
-
-    def scanline_texture(self, lista_poligono, textura):
+    def scanline_com_color(self, lista_poligono, color):
         # Capturo o valor mínimo e máximo de y de um polígono na coluna dos "y" da matriz de polígonos
         # Com esses valores, consigo determinar a altura total do polígono e saber por onde a scanline
         # deve varrer em posições y (entre y_minimo e y_maximo)
+        y_minimo = min(coluna[1] for coluna in lista_poligono)
+        y_maximo = max(coluna[1] for coluna in lista_poligono)
+
+
+        # Para cada y de scanline, varre toda a altura do polígono
+        for y_da_scanline in range(y_minimo, y_maximo):
+            i = [] # Lista de pontos (x,y) de interseções
+
+            # Aqui verifico segmentos de reta. Vejo o ponto inicial.
+            ponto_inicial_x = lista_poligono[0][0]
+            ponto_inicial_y = lista_poligono[0][1]
+            for indice in range(1, len(lista_poligono)):
+
+                # E aqui vejo o ponto final do segmento de um polígono.
+                ponto_final_x = lista_poligono[indice][0]
+                ponto_final_y = lista_poligono[indice][1]
+
+                # Aplico o algoritmo usando o y de varredura da scanline para
+                # descobrir se intersecciona em algum ponto do segmento de reta
+                # do polígono. Como eu já sei onde o y da scanline está, eu só
+                # preciso saber o ponto x dessa interseção.
+                ponto_intersecao_x = round(self.__intersecao(y_da_scanline, [[ponto_inicial_x, ponto_inicial_y],[ponto_final_x, ponto_final_y]]))
+
+                # Se descobriu algum ponto de interseção, então guardo esse ponto na lista de interseções.
+                if ponto_intersecao_x >= 0:
+                    i.append(ponto_intersecao_x)
+                
+                # Agora faço novamente o processo, só que agora transformo o que
+                # era ponto final antes em inicial, assim percorro a próxima 
+                # aresta do polígono em sentido horário.
+                ponto_inicial_x = ponto_final_x
+                ponto_inicial_y = ponto_final_y
+
+            # Terminou as arestas, agora faço uma última verificação para fechar o loop do polígono,
+            # sendo agora o ponto final o primeiro vértice do polígono.
+            ponto_final_x = lista_poligono[0][0]
+            ponto_final_y = lista_poligono[0][1]
+
+            ponto_intersecao_x = round(self.__intersecao(y, [[ponto_inicial_x, ponto_inicial_y],[ponto_final_x, ponto_final_y]]))
+            
+            if ponto_intersecao_x >=0:
+                i.append(ponto_intersecao_x)
+
+            # Encontrei todos os pontos de interseção da primeira linha de scanline,
+            # ordeno o vetor de interseções, pois se ele estiver desordenado, 
+            # pode ocorrer que o loop interno "for pintar_pixel_em_x" não execute,
+            # por exemplo, de 18 para 6, caso o 18 venha primeiro no vetor.
+            i.sort()
+
+            # Para cada ponto de interseção descoberto, eu pulo de 2 em 2, como falado no SCANLINE.md
+            for ponto_intersecao in range(0, len(i), 2):
+
+                #==SOLUÇÃO ALTERNATIVA AO .sort() ANTERIOR==
+                #x_1 = i[ponto_intersecao]
+                #x_2 = i[ponto_intersecao+1]
+                #
+                #if x_2 < x_1:
+                #   #x_2, x_1 = x_1, x_2
+                #===========================================
+
+                # Preciso pintar todos os pixels no intervalo de um ponto de interseção ao seguinte
+                for pintar_pixel_em_x in range(i[ponto_intersecao], i[ponto_intersecao+1]):
+                    self.__screen.set_pixel(pintar_pixel_em_x, y_da_scanline, color)
+                
+
+
+    def scanline_com_texture(self, lista_poligono, textura):
         y_minimo = min(coluna[1] for coluna in lista_poligono)
         y_maximo = min(coluna[1] for coluna in lista_poligono)
 

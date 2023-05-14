@@ -89,3 +89,22 @@ class Color:
 
     def get_rgba(self):
         return self.__red, self.__green, self.__blue, self.__alpha
+    
+    def set_rgba(self, color:tuple):
+        red, green, blue, alpha = color
+        if -1 < red < 256:
+            self.__red = red
+        else:
+            self.__red = 0
+        if -1 < green < 256:
+            self.__green = green
+        else:
+            self.__green = 0
+        if -1 < blue < 256:
+            self.__blue = blue
+        else:
+            self.__blue = 0
+        if -1 < alpha < 256:
+            self.__alpha = alpha
+        else:
+            self.__alpha = 255

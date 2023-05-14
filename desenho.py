@@ -1,6 +1,7 @@
 import numpy as np
 from screen import Color
 
+
 class Desenho:
 
     def __init__(self, screen):
@@ -125,7 +126,7 @@ class Desenho:
                     self.__screen.set_pixel(int(np.floor(x)), int(
                         round(y)), color_serrilhado_1)
                     self._screen.set_pixel(int(np.floor(x+1)),
-                                   int(round(y)), color_serrilhado_2)
+                                           int(round(y)), color_serrilhado_2)
 
             else:
                 self.__screen.set_pixel(x, y, color)
@@ -179,8 +180,6 @@ class Desenho:
                     p = p - (2 * abs(delta_y)) + (2 * abs(delta_x))
                 else:
                     p = p + (2 * abs(delta_x))
-
-    
 
     def circunferencia(self, x_origem, y_origem, raio, color):
         # 1° Quadrante
@@ -324,24 +323,29 @@ class Desenho:
                 pilha.append((x, y))
             if y == 0:
                 pilha.append((x, y))
-    
+
     def desenha_poligono(self, lista_poligono, color, scanline_color=None):
         x = lista_poligono[0][0]
         y = lista_poligono[0][1]
         for i in range(1, len(lista_poligono)):
-            self.reta_DDA(x, y, lista_poligono[i][0], lista_poligono[i][1], color)
+            self.reta_DDA(
+                x, y, lista_poligono[i][0], lista_poligono[i][1], color)
             x = lista_poligono[i][0]
             y = lista_poligono[i][1]
         self.reta_DDA(x, y, lista_poligono[0][0], lista_poligono[0][1], color)
         if scanline_color is not None:
-            self.scanline_com_color(lista_poligono, scanline_color)
+            if isinstance(scanline_color, Color):
+                self.scanline_simples(lista_poligono, scanline_color)
+            elif isinstance(scanline_color, list):
+                self.scanline_degrade(lista_poligono, scanline_color)
 
     def __intersecao(self, y_da_scanline, segmento_de_reta):
-        x_inicial, y_inicial, x_final, y_final = segmento_de_reta[0][0], segmento_de_reta[0][1], segmento_de_reta[1][0], segmento_de_reta[1][1]
-        
+        x_inicial, y_inicial, x_final, y_final = segmento_de_reta[0][
+            0], segmento_de_reta[0][1], segmento_de_reta[1][0], segmento_de_reta[1][1]
+
         # Se o segmento de reta for horizontal, não tem interseção (ou interseção infinita)
         if y_inicial == y_final:
-            return -1
+            return (-1, -1)
 
         # Se a orientação da reta for de baixo pra cima, troca temporariamente
         if y_inicial > y_final:
@@ -355,25 +359,25 @@ class Desenho:
         # com a reta do polígono
         if 0 < t <= 1:
             x = x_inicial + t*(x_final - x_inicial)
-            return x
-        
-        return -1
-    
-    def scanline_com_color(self, lista_poligono, color):
+            return (x, t)
+
+        return (-1, -1)
+
+    def scanline_simples(self, lista_poligono, color):
         # Capturo o valor mínimo e máximo de y de um polígono na coluna dos "y" da matriz de polígonos
         # Com esses valores, consigo determinar a altura total do polígono e saber por onde a scanline
         # deve varrer em posições y (entre y_minimo e y_maximo)
         y_minimo = min(coluna[1] for coluna in lista_poligono)
         y_maximo = max(coluna[1] for coluna in lista_poligono)
 
-
         # Para cada y de scanline, varre toda a altura do polígono
         for y_da_scanline in range(y_minimo, y_maximo):
-            i = [] # Lista de pontos (x,y) de interseções
+            i = []  # Lista de pontos (x,y) de interseções
 
             # Aqui verifico segmentos de reta. Vejo o ponto inicial.
             ponto_inicial_x = lista_poligono[0][0]
             ponto_inicial_y = lista_poligono[0][1]
+
             for indice in range(1, len(lista_poligono)):
 
                 # E aqui vejo o ponto final do segmento de um polígono.
@@ -384,14 +388,16 @@ class Desenho:
                 # descobrir se intersecciona em algum ponto do segmento de reta
                 # do polígono. Como eu já sei onde o y da scanline está, eu só
                 # preciso saber o ponto x dessa interseção.
-                ponto_intersecao_x = round(self.__intersecao(y_da_scanline, [[ponto_inicial_x, ponto_inicial_y],[ponto_final_x, ponto_final_y]]))
+                tupla_de_x_e_t = self.__intersecao(y_da_scanline, [
+                                                   [ponto_inicial_x, ponto_inicial_y], [ponto_final_x, ponto_final_y]])
+                ponto_intersecao_x = round(tupla_de_x_e_t[0])
 
                 # Se descobriu algum ponto de interseção, então guardo esse ponto na lista de interseções.
                 if ponto_intersecao_x >= 0:
                     i.append(ponto_intersecao_x)
-                
+
                 # Agora faço novamente o processo, só que agora transformo o que
-                # era ponto final antes em inicial, assim percorro a próxima 
+                # era ponto final antes em inicial, assim percorro a próxima
                 # aresta do polígono em sentido horário.
                 ponto_inicial_x = ponto_final_x
                 ponto_inicial_y = ponto_final_y
@@ -401,13 +407,15 @@ class Desenho:
             ponto_final_x = lista_poligono[0][0]
             ponto_final_y = lista_poligono[0][1]
 
-            ponto_intersecao_x = round(self.__intersecao(y, [[ponto_inicial_x, ponto_inicial_y],[ponto_final_x, ponto_final_y]]))
-            
-            if ponto_intersecao_x >=0:
+            tupla_de_x_e_t = self.__intersecao(y_da_scanline, [
+                                               [ponto_inicial_x, ponto_inicial_y], [ponto_final_x, ponto_final_y]])
+            ponto_intersecao_x = round(tupla_de_x_e_t[0])
+
+            if ponto_intersecao_x >= 0:
                 i.append(ponto_intersecao_x)
 
             # Encontrei todos os pontos de interseção da primeira linha de scanline,
-            # ordeno o vetor de interseções, pois se ele estiver desordenado, 
+            # ordeno o vetor de interseções, pois se ele estiver desordenado,
             # pode ocorrer que o loop interno "for pintar_pixel_em_x" não execute,
             # por exemplo, de 18 para 6, caso o 18 venha primeiro no vetor.
             i.sort()
@@ -415,21 +423,101 @@ class Desenho:
             # Para cada ponto de interseção descoberto, eu pulo de 2 em 2, como falado no SCANLINE.md
             for ponto_intersecao in range(0, len(i), 2):
 
-                #==SOLUÇÃO ALTERNATIVA AO .sort() ANTERIOR==
-                #x_1 = i[ponto_intersecao]
-                #x_2 = i[ponto_intersecao+1]
+                # ==SOLUÇÃO ALTERNATIVA AO .sort() ANTERIOR==
+                # x_1 = i[ponto_intersecao]
+                # x_2 = i[ponto_intersecao+1]
                 #
-                #if x_2 < x_1:
+                # if x_2 < x_1:
                 #   #x_2, x_1 = x_1, x_2
-                #===========================================
+                # ===========================================
 
                 # Preciso pintar todos os pixels no intervalo de um ponto de interseção ao seguinte
                 for pintar_pixel_em_x in range(i[ponto_intersecao], i[ponto_intersecao+1]):
-                    self.__screen.set_pixel(pintar_pixel_em_x, y_da_scanline, color)
-                
+                    self.__screen.set_pixel(
+                        pintar_pixel_em_x, y_da_scanline, color)
 
+    def scanline_degrade(self, lista_poligono, lista_cores_vertices):
+        y_minimo = min(coluna[1] for coluna in lista_poligono)
+        y_maximo = max(coluna[1] for coluna in lista_poligono)
 
-    def scanline_com_texture(self, lista_poligono, textura):
+        for y_da_scanline in range(y_minimo, y_maximo):
+            i = []
+            lista_cores_intersecao = []
+
+            ponto_inicial_x = lista_poligono[0][0]
+            ponto_inicial_y = lista_poligono[0][1]
+
+            for indice in range(1, len(lista_poligono)):
+
+                ponto_final_x = lista_poligono[indice][0]
+                ponto_final_y = lista_poligono[indice][1]
+                ponto_inicial_cor = lista_cores_vertices[indice-1].get_rgba()
+                ponto_final_cor = lista_cores_vertices[indice].get_rgba()
+
+                tupla_de_x_e_t = self.__intersecao(y_da_scanline, [
+                                                   [ponto_inicial_x, ponto_inicial_y], [ponto_final_x, ponto_final_y]])
+                ponto_intersecao_x = round(tupla_de_x_e_t[0])
+                t = tupla_de_x_e_t[1]
+
+                if ponto_inicial_y > ponto_final_y:
+                    ponto_final_cor, ponto_inicial_cor = ponto_inicial_cor, ponto_final_cor
+
+                cor_intersecao = []
+                for rgba in range(4):
+                    cor = int(round((ponto_final_cor[rgba]-ponto_inicial_cor[rgba])*t + ponto_inicial_cor[rgba]))
+                    cor_intersecao.append(cor)
+                cor_intersecao = tuple(cor_intersecao)
+
+                if ponto_intersecao_x >= 0:
+                    i.append(ponto_intersecao_x)
+                    lista_cores_intersecao.append(cor_intersecao)
+
+                ponto_inicial_cor = ponto_final_cor
+                ponto_inicial_x = ponto_final_x
+                ponto_inicial_y = ponto_final_y
+
+            ponto_final_x = lista_poligono[0][0]
+            ponto_final_y = lista_poligono[0][1]
+            ponto_final_cor = lista_cores_vertices[0].get_rgba()
+
+            tupla_de_x_e_t = self.__intersecao(y_da_scanline, [
+                                               [ponto_inicial_x, ponto_inicial_y], [ponto_final_x, ponto_final_y]])
+            ponto_intersecao_x = round(tupla_de_x_e_t[0])
+            t = tupla_de_x_e_t[1]
+
+            if ponto_inicial_y > ponto_final_y:
+                ponto_final_cor, ponto_inicial_cor = ponto_inicial_cor, ponto_final_cor
+
+            cor_intersecao = []
+            for rgba in range(4):
+                cor = int(round((ponto_final_cor[rgba] - ponto_inicial_cor[rgba]) * t + ponto_inicial_cor[rgba]))
+                cor_intersecao.append(cor)
+            cor_intersecao = tuple(cor_intersecao)
+
+            if ponto_intersecao_x >= 0:
+                i.append(ponto_intersecao_x)
+                lista_cores_intersecao.append(cor_intersecao)
+
+            dados_para_ordenar = list(zip(i, lista_cores_intersecao))
+            dados_ordenados = sorted(dados_para_ordenar, key=lambda x: x[1])
+            lista_cores_intersecao = [x[1] for x in dados_ordenados]
+            i.sort()
+
+            for ponto_intersecao in range(0, len(i), 2):
+                for pintar_pixel_em_x in range(i[ponto_intersecao], i[ponto_intersecao+1]):
+                    porcentagem_de_cor = (
+                        pintar_pixel_em_x-i[ponto_intersecao])/(i[ponto_intersecao+1]-i[ponto_intersecao])
+                    color = []
+                    for rgba in range(4):
+                        rgba_para_pintar_pixel_em_x = int(round(
+                            (lista_cores_intersecao[ponto_intersecao+1][rgba]-lista_cores_intersecao[ponto_intersecao][rgba])*porcentagem_de_cor + lista_cores_intersecao[ponto_intersecao][rgba]))
+                        color.append(rgba_para_pintar_pixel_em_x)
+                    color = tuple(color)
+                    r, g, b, a = color
+                    self.__screen.set_pixel(
+                        pintar_pixel_em_x, y_da_scanline, Color(r, g, b, a))
+
+    def scanline_texture(self, lista_poligono, textura):
         y_minimo = min(coluna[1] for coluna in lista_poligono)
         y_maximo = min(coluna[1] for coluna in lista_poligono)
 
@@ -438,12 +526,14 @@ class Desenho:
             ponto_inicial = lista_poligono[0]
             for p in range(1, len(lista_poligono)):
                 ponto_final = lista_poligono[p]
-                ponto_intersecao = self.__intersecao(y, [ponto_inicial, ponto_final])
+                ponto_intersecao = self.__intersecao(
+                    y, [ponto_inicial, ponto_final])
                 if ponto_inicial[0] >= 0:
                     i.append(ponto_intersecao)
                 ponto_inicial = ponto_final
             ponto_final = lista_poligono[0]
-            ponto_intersecao = self.__intersecao(y, [ponto_inicial, ponto_final])
+            ponto_intersecao = self.__intersecao(
+                y, [ponto_inicial, ponto_final])
 
             if ponto_inicial[0] >= 0:
                 i.append[ponto_intersecao]

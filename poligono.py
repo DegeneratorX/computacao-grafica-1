@@ -44,9 +44,11 @@ class Poligono:
                 [origem_x+metade_lado-1, origem_y+metade_lado-1],
             ]
         else:
+            lista_poligono = [
                 [origem_x-metade_lado, origem_y+metade_lado],
                 [origem_x+metade_lado, origem_y-metade_lado],
                 [origem_x+metade_lado, origem_y+metade_lado],
+            ]
         return lista_poligono
 
     @staticmethod

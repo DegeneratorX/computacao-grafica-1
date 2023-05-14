@@ -442,6 +442,7 @@ class Desenho:
 
         for y_da_scanline in range(y_minimo, y_maximo):
             i = []
+            # Preciso linkar as cores com cada vértice de interseção
             lista_cores_intersecao = []
 
             ponto_inicial_x = lista_poligono[0][0]
@@ -451,31 +452,43 @@ class Desenho:
 
                 ponto_final_x = lista_poligono[indice][0]
                 ponto_final_y = lista_poligono[indice][1]
+                # Pego as cores dos pontos iniciais e finais da aresta definidos pela lista passada
                 ponto_inicial_cor = lista_cores_vertices[indice-1].get_rgba()
                 ponto_final_cor = lista_cores_vertices[indice].get_rgba()
 
                 tupla_de_x_e_t = self.__intersecao(y_da_scanline, [
                                                    [ponto_inicial_x, ponto_inicial_y], [ponto_final_x, ponto_final_y]])
                 ponto_intersecao_x = round(tupla_de_x_e_t[0])
+                # Preciso do t para fazer a interpolação de cores
                 t = tupla_de_x_e_t[1]
 
+                # Aplico a mesma regra da orientação da reta (da interseção) para cores, só que aqui mesmo
                 if ponto_inicial_y > ponto_final_y:
                     ponto_final_cor, ponto_inicial_cor = ponto_inicial_cor, ponto_final_cor
 
+                # Algoritmo de interpolação. Aqui ele vai trabalhar com % para saber qual a cor em %
+                # do vértice de interseção, e depois transforma em tupla com RGBA. Cada vértice de interseção
+                # com a scanline terá, portanto, sua cor. O for é apenas para trabalhar individualmente a porcentagem
+                # em cada cor R G B A.
                 cor_intersecao = []
                 for rgba in range(4):
                     cor = int(round((ponto_final_cor[rgba]-ponto_inicial_cor[rgba])*t + ponto_inicial_cor[rgba]))
                     cor_intersecao.append(cor)
                 cor_intersecao = tuple(cor_intersecao)
 
+                # Se descobriu uma interseção, guarda a interseção na lista de interseções, e sua respectiva cor.
                 if ponto_intersecao_x >= 0:
                     i.append(ponto_intersecao_x)
                     lista_cores_intersecao.append(cor_intersecao)
 
+                # Faço a troca de cores para os respectivos vértices. Como estou percorrendo a próxima aresta,
+                # preciso também mudar a cor.
                 ponto_inicial_cor = ponto_final_cor
                 ponto_inicial_x = ponto_final_x
                 ponto_inicial_y = ponto_final_y
 
+            # Quando o laço terminar, significa que não tem mais arestas para verificar se há interseções.
+            # Portanto, verifico apenas a última aresta que liga do último vértice ao vértice que começou.
             ponto_final_x = lista_poligono[0][0]
             ponto_final_y = lista_poligono[0][1]
             ponto_final_cor = lista_cores_vertices[0].get_rgba()
@@ -498,6 +511,7 @@ class Desenho:
                 i.append(ponto_intersecao_x)
                 lista_cores_intersecao.append(cor_intersecao)
 
+            # Ordeno pareando a lista de interseções com suas cores respectivas
             dados_para_ordenar = list(zip(i, lista_cores_intersecao))
             dados_ordenados = sorted(dados_para_ordenar, key=lambda x: x[1])
             lista_cores_intersecao = [x[1] for x in dados_ordenados]
@@ -505,8 +519,13 @@ class Desenho:
 
             for ponto_intersecao in range(0, len(i), 2):
                 for pintar_pixel_em_x in range(i[ponto_intersecao], i[ponto_intersecao+1]):
+                    # Faço um cálculo de porcentagem agora para x, para saber o quão irá variar de cor na scanline horizontal
+                    # entre uma interseção e outra.
                     porcentagem_de_cor = (
                         pintar_pixel_em_x-i[ponto_intersecao])/(i[ponto_intersecao+1]-i[ponto_intersecao])
+                    # Uso a porcentagem para fazer a redução ou aumento de cor baseado na posição que o x da scanline está.
+                    # O for é apenas para fazer a porcentagem aplicada a RGBA individualmente.
+                    # E depois guardo o RGBA em uma tupla.
                     color = []
                     for rgba in range(4):
                         rgba_para_pintar_pixel_em_x = int(round(

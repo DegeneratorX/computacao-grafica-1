@@ -536,6 +536,7 @@ class Desenho:
                     self.__screen.set_pixel(
                         pintar_pixel_em_x, y_da_scanline, Color(r, g, b, a))
 
+    # TERMINAR (INCOMPLETO)
     def scanline_texture(self, lista_poligono, textura):
         y_minimo = min(coluna[1] for coluna in lista_poligono)
         y_maximo = min(coluna[1] for coluna in lista_poligono)

@@ -1,4 +1,6 @@
 import pygame
+import numpy as np
+from PIL import Image
 
 class Screen:
     # Construtor da classe Screen
@@ -22,7 +24,7 @@ class Screen:
     # da lib pygame também deve tratar, mas por precaução, estou fazendo aqui
     # também, como forma didática.
 
-    def get_pixel(self, x, y, textura):
+    def get_pixel(self, x, y):
         if x < 0:
             x = 0
         if y < 0:
@@ -34,7 +36,7 @@ class Screen:
             y = self.__screen.get_height()-1
 
         return self.__screen.get_at((x, y))
-
+    
     def set_pixel(self, x, y, color):
 
         # Se as coordenadas forem negativas, passam a ser no minimo zero.
@@ -108,3 +110,43 @@ class Color:
             self.__alpha = alpha
         else:
             self.__alpha = 255
+
+class Texture:
+    def __init__(self, path) -> None:
+        self.__texture = Image.open(path)
+        self.__texture = self.__texture.convert("RGB")
+        self.__texture_matrix = np.asarray(self.__texture)
+
+    def get_texture_instance(self):
+        return self.__texture
+    
+    def get_texture_matrix(self):
+        return self.__texture_matrix
+    
+        # get_pixel para textura
+    def get_pixel_texture(self, x, y):
+        if x < 0:
+            x = 0
+        if y < 0:
+            y = 0
+
+        if x > 1:
+            x = 1
+        if y > 1:
+            y = 1
+
+        x = round(x*self.__texture_matrix.shape[1])
+        y = round(y*self.__texture_matrix.shape[0])
+
+        if x >= self.__texture_matrix.shape[1]:
+            x = self.__texture_matrix.shape[1] - 1
+        if y >= self.__texture_matrix.shape[0]:
+            y = self.__texture_matrix.shape[1] - 1
+
+        return self.__texture_matrix[y][x]
+
+    
+    def set_texture(self, path):
+        self.__texture = Image.open(path)
+        self.__texture = self.__texture.convert("RGB")
+        self.__texture_matrix = np.asarray(self.__texture)

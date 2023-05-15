@@ -41,3 +41,35 @@ Veja, um problema ocorre ao interseccionar a scanline sobre um vértice. Se o po
 O que eu fiz aqui? Basicamente eu ignorei a interseção quando t for zero, que é quando a scanline passa por algum vértice inicial. Porém, isso quebra a outra exceção, que já estava bonitinha funcionando. Então para resolver de vez o problema, no próprio algoritmo de interseção, invertemos os valores $P_f$ e $P_i$ quando a construção da aresta do polígono for feita de baixo pra cima. Quando for de cima pra baixo, faz nada. Assim resolvemos o problema, pois sempre que tiver dois vértices coincidindo e a scanline precisa pintar horizontalmente, ela vai pintar sempre em 2 pontos finais, o que é perfeito para fazer pinturas em interseções 2 a 2.
 
 E sim, quando inverte $P_f$ com $P_i$, basicamente se eu tiver um $t = 0.3$ (30% da reta), ele passa a ser $t = 0.7$ (70% da reta).
+
+# Scanline
+
+O algoritmo de scanline basicamente pega as interseções descobertas entre a linha de scanline e a aresta de um polígono, e de 2 em 2 ele pinta entre interseções, como já mostrado. Sempre quando for fazer as inteseções, é preciso analisar, para cada y de scanline, quais arestas do polígono na estrutura de dados do polígono intersectam com a linha da scanline. Para analisar cada aresta, sempre percorremos em sentido horário as arestas do polígono. Para percorrer, basta guardar as informações do ponto inicial e final de cada aresta, e sempre a aresta subsequente terá o ponto inicial igual o ponto final da aresta anterior. Feito isso, pintamos a scanline.
+
+Além disso, para garantir que possamos guardar o x das interseções (pois já sabemos o y), usamos uma estrutura de dados simples. Essa estrutura é fundamental para que possamos pular de 2 em 2 interseções. E o mais importante: essa estrutura precisa estar ordenada de forma crescente! Assim evita cortes de preenchimento do polígono dependendo da ordem com que os vértices do polígono foram definidos na estrutura de dados do polígono.
+
+# Scanline com interpolação de cores
+
+Quando se aplica cores em degradê em um polígono, em qualquer software, se utiliza a seguinte definição: todo vértice tem uma cor atribuída.
+
+Portanto, se eu tenho um quadrado, 
+
+O algoritmo que interpola cores em degradê é mais complexo, mas basicamente ele usa muito do "t" como parâmetro para saber em quantos % tal cor deve ser atribuida a um vértice de interseção.
+
+![](2023-05-14-21-31-21.png)
+
+Quadrado rosa = tela.
+
+Perceba que também preciso dar nome aos bois. Ou seja, pra cada interseção, tem que haver uma cor correspondente. O cálculo é pela fórmula
+
+$$\Large\boxed{c_{intersecao} = (c_f - c_i)t + c_i}$$
+
+E assim aplico essa fórmula para cada canal RGB. Essa fórmula nada mais é que a fórmula de porcentagem aplicada. Para cada varredura pintada terei um $t$ diferente interseccionando, e portanto uma variação de cor contínua de um vértice inicial para um final.
+
+Porém o que interessa pra gente não é pintar os vértices, e sim dentro do polígono. Para isso precisamos novamente mexer com porcentagens, dessa vez pegando as informações de cores dos pontos de interseção, e ver: entre uma interseção na esquerda e outra na direita, quanto devo variar a cor? Aplico a mesma lógica do ponto inicial e final da aresta, dessa vez só troca os nomes: de uma interseção para outra.
+
+![](2023-05-14-22-26-04.png)
+
+O resultado é esse aqui:
+
+![](2023-05-14-22-36-16.png)

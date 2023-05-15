@@ -515,7 +515,7 @@ class Desenho:
 
             # Ordeno pareando a lista de interseções com suas cores respectivas
             dados_para_ordenar = list(zip(i, lista_cores_intersecao))
-            dados_ordenados = sorted(dados_para_ordenar, key=lambda x: x[1])
+            dados_ordenados = sorted(dados_para_ordenar, key=lambda x: x[0])
             lista_cores_intersecao = [x[1] for x in dados_ordenados]
             i.sort()
 
@@ -538,26 +538,73 @@ class Desenho:
                     self.__screen.set_pixel(
                         pintar_pixel_em_x, y_da_scanline, Color(r, g, b, a))
 
-    def _instersecao_para_textura(self, y_da_scanline, segmento_de_reta):
+    # O algoritmo de interseção muda um pouco, pois agora precisamos passar uma estrutura de dados no formato [[xi, yi], [xf, yf]]
+    # para o segmento de reta.
+    def __instersecao_para_textura(self, y_da_scanline, segmento_de_reta):
+        # Aqui trabalho com pontos (x,y) ao invés de individualmente, mas é a mesma coisa.
         ponto_inicial = segmento_de_reta[0]
         ponto_final = segmento_de_reta[1]
 
+        # Se y do ponto inicial é igual o final, então a reta é horizontal.
         if ponto_inicial[1] == ponto_final[1]:
+            # Retorno do (x,y) da interseção e o correspondente x da textura e y da textura)
+            # [x y tx ty]
             return [-1, 0, 0, 0]
         
+        # Mudança de orientação da aresta se for de baixo pra cima 
         if ponto_inicial[1] > ponto_final[1]:
             ponto_inicial, ponto_final = ponto_final, ponto_inicial
 
         t = (y_da_scanline - ponto_inicial[1])/(ponto_final[1] - ponto_inicial[1])
 
-        # 
+        # Calculo o x da textura e y da textura
         if t > 0 and t <= 1:
-            x = ponto_inicial[0] + t*(ponto_final[0] - ponto_inicial[0])
+            x = int(round(ponto_inicial[0] + t*(ponto_final[0] - ponto_inicial[0])))
             x_da_textura = ponto_inicial[2] + t*(ponto_final[2] - ponto_inicial[2])
             y_da_textura = ponto_inicial[3] + t*(ponto_final[3] - ponto_inicial[3])
             return [x, y_da_scanline, x_da_textura, y_da_textura]
         return [-1, 0, 0, 0]
 
-    # TERMINAR (INCOMPLETO)
+
     def __scanline_texture(self, lista_poligono, textura):
-        pass
+        y_minimo = min(coluna[1] for coluna in lista_poligono)
+        y_maximo = max(coluna[1] for coluna in lista_poligono)
+
+        for y_da_scanline in range(y_minimo, y_maximo):
+            i = []
+            ponto_inicial = lista_poligono[0]
+
+            for indice in range(1, len(lista_poligono)):
+                ponto_final = lista_poligono[indice]
+
+                ponto_intersecao = self.__instersecao_para_textura(y_da_scanline, [ponto_inicial, ponto_final])
+                if ponto_intersecao[0] >= 0:
+                    i.append(ponto_intersecao)
+
+                ponto_inicial = ponto_final
+            
+            ponto_final = lista_poligono[0]
+            ponto_intersecao = self.__instersecao_para_textura(y_da_scanline, [ponto_inicial, ponto_final])
+
+            if ponto_intersecao[0] >= 0:
+                i.append(ponto_intersecao)
+            
+            # Ordenação da lista de interseções. Como estou usando numpy.array, n uso simplesmente i.sort(), e sim
+            # esse artifício, que vai ordenar os "x" de forma crescente, e ao mesmo tempo leva consigo os outros
+            # números de sua lista pareados.
+            i = np.array(i)
+            if i.any():
+                primeiro_indice_x = i[:, 0].argsort()
+                i = i[primeiro_indice_x]
+
+            for ponto_intersecao in range(0, i.shape[0], 2):
+                for pintar_pixel_em_x in range(int(i[ponto_intersecao][0]), int(i[ponto_intersecao+1][0])):
+                    porcentagem_de_cor = (pintar_pixel_em_x - i[ponto_intersecao][0])/(i[ponto_intersecao+1][0] - i[ponto_intersecao][0])
+                    
+                    x_da_textura = i[ponto_intersecao][2] + porcentagem_de_cor*(i[ponto_intersecao+1][2] - i[ponto_intersecao][2])
+                    y_da_textura = i[ponto_intersecao][3] + porcentagem_de_cor*(i[ponto_intersecao+1][3] - i[ponto_intersecao][3])
+                    
+                    cor = textura.get_pixel_texture(x_da_textura, y_da_textura)
+                    r, g, b = cor
+
+                    self.__screen.set_pixel(pintar_pixel_em_x, y_da_scanline, Color(r, g, b))

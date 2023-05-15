@@ -21,20 +21,41 @@ def main():
                 break
 
         screen_object.clear_screen()
+        textura = Texture("gato.jpg")
         desenhar_na_screen = Desenho(screen_object)
 
-        triangulo = Poligono().bloco(200, 200, 300)
-        cores_triangulo = [
+        quadrado = Poligono().bloco(300, 300, 300)
+        triangulo = Poligono().meio_bloco(200, 200, 300)
+        cores_triangulo= [
             Color(255, 0, 0, 0),
             Color(0, 255, 0, 0),
             Color(0, 0, 255, 0),
             Color(255, 255, 255, 0)
         ]
-        desenhar_na_screen.desenha_poligono(triangulo, Color(0, 255, 0), cores_triangulo)
 
-        textura = Texture("gato.jpg")
-        pixel = textura.get_pixel_texture(1, 0)
-        print(pixel)
+        #desenhar_na_screen.desenha_poligono(quadrado, Color(0, 255, 0, 0), cores_triangulo)
+
+        lista_poligono_customizado = [
+            [50, 60, 0, 0],
+            [150, 40, 1, 0],
+            [200, 200, 1, 1],
+            [20, 200, 0, 1],
+        ]
+
+        lista_poligono_customizado2 = [
+            [300, 60, 0, 0],
+            [400, 40, 0.5, 0],
+            [450, 200, 0.5, 1],
+            [270, 200, 0, 1],
+        ]
+
+
+        poligono_custom = Poligono(lista_poligono_customizado)
+        desenhar_na_screen.desenha_poligono(
+            poligono_custom.lista_poligono_customizado, Color(0, 255, 0, 0), textura)
+        desenhar_na_screen.desenha_poligono(lista_poligono_customizado2, Color(0, 255, 0, 0), textura)
+
+        # desenhar_na_screen.desenha_poligono(quadrado, Color(0, 255, 0), cores_triangulo)
 
         screen_object.update()
         clock.tick(60)

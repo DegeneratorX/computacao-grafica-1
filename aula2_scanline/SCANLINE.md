@@ -73,3 +73,17 @@ Porém o que interessa pra gente não é pintar os vértices, e sim dentro do po
 O resultado é esse aqui:
 
 ![](2023-05-14-22-36-16.png)
+
+# Scanline com textura
+
+Quando se trata de scanline com textura, normalmente atribuimos aos vértices de um polígono, as coordenadas de textura que será preenchida naquele polígono, em porcentagem (de 0 a 1). As texturas são aplicadas em um polígono de 4 vértices, afinal uma imagem é uma matriz, e matriz sempre é retangular. Por convenção, atribuímos para cada vértice, (0,0), (1,0), (1,1) e (0, 1) (sentido horário de criação do polígono).
+
+Assim usamos esses valores para finalmente preencher o polígono com a textura. Pra isso é preciso na scanline fazer interseções e ver quais pontos de interseção existem. E assim, entre uma interseção e outra, vejo quais são os pontos do polígono para cada desenho da scanline qeu é equivalente em porcentagem ao que está na textura. Descoberto isso, faço get_pixel da textura e jogo no ponto do polígono onde no momento está fazendo a varredura.
+
+![](2023-05-15-14-19-27.png)
+
+Se quebrarmos um pouco a convenção de 0 a 1, obtemos esse resultado:
+
+![](2023-05-15-15-00-42.png)
+
+Esquerda: convenção. Direita: se colocarmos 50% da textura em x para cada vértice do polígono do lado direito.

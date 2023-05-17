@@ -51,6 +51,11 @@ def main():
 
 
         poligono_custom = Poligono(lista_poligono_customizado)
+
+        transformacao = Poligono.rotacionar_poligono(30)
+        transformacao = Poligono.redimensionar_poligono(50, 50, transformacao)
+        poligono_custom.aplicar_transformacao_com_acumulos(transformacao)
+        
         desenhar_na_screen.desenha_poligono(
             poligono_custom.lista_poligono_customizado, Color(0, 255, 0, 0), textura)
         desenhar_na_screen.desenha_poligono(lista_poligono_customizado2, Color(0, 255, 0, 0), textura)

@@ -61,85 +61,76 @@ class Poligono:
         ]
         return lista_poligono
 
+    # Acúmulo = matriz que acumula transformações sucessivas em uma identidade (inicialmente) para depois ser aplicada
+    # ao polígono.
     @staticmethod
-    def trapezio_simetrico(origem, base_maior, base_menor, altura):
-        lista_poligono = [
-            [origem-base_menor/2, origem+altura/2],
-            [origem+base_menor/2, origem+altura/2],
-            [origem+base_maior/2, origem-altura/2],
-            [origem-base_maior/2, origem-altura/2],
-        ]
-        return lista_poligono
-
-    @staticmethod
-    def triangulo_equilatero(origem, lado):
-        altura = (np.sqrt(3)/2)*lado
-        lista_poligono = [
-            [origem-lado/2, origem+altura/2],
-            [origem+lado/2, origem+altura/2],
-            [origem+lado/2, origem-altura/2],
-            [origem-lado/2, origem-altura/2],
-        ]
-        return lista_poligono
-
-    def losango(origem, lado):
-        pass
+    def mover_poligono(translacao_x, translacao_y, acumulo=[[1,0,0],[0,1,0],[0,0,1]]):
+        return multiplicacao_matrizes([
+            [1, 0, translacao_x],
+            [0, 1, translacao_y],
+            [0, 0 ,           1]
+        ], acumulo)
     
-    # TODO
     @staticmethod
-    def pentagono_equilatero(origem, lado):
-        base = lado * np.sqrt(5-2*np.sqrt(5))/2
-        pol = [
-            [origem-lado/2, origem+altura/2],
-            [origem+lado/2, origem+altura/2],
-            [origem+lado/2, origem-altura/2],
-            [origem-lado/2, origem-altura/2],
-        ]
+    def redimensionar_poligono(escala_x, escala_y, acumulo=[[1,0,0],[0,1,0],[0,0,1]]):
+        return multiplicacao_matrizes([
+            [escala_x, 0, 0],
+            [0, escala_y, 0],
+            [0, 0,        1]
+        ], acumulo)
     
-    # TODO
     @staticmethod
-    def hexagono_equilatero(origem, lado):
-        pass
-
-    def mover_poligono(self, translacao_x, translacao_y):
-        translacao_matriz = list()
-
-        for _ in range(len(self.__lista_poligono_customizado)):
-            translacao_matriz.append(np.array([translacao_x, translacao_y]))
-
-        if not isinstance(self.__lista_poligono_customizado, np.ndarray):
-            self.__lista_poligono_customizado = np.array(self.__lista_poligono_customizado)
-
-        self.__lista_poligono_customizado[:, 0:2] = self.__lista_poligono_customizado[:, 0:2] + np.array(translacao_matriz)
-
-        return self.__lista_poligono_customizado
+    def rotacionar_poligono(angulo, acumulo=[[1,0,0],[0,1,0],[0,0,1]]):
+        angulo = angulo*np.pi/180
+        return multiplicacao_matrizes([
+            [np.cos(angulo), -np.sin(angulo), 0],
+            [np.sin(angulo), np.cos(angulo),  0],
+            [0, 0,                            1]
+        ], acumulo)
     
-    def redimensionar_poligono(self, escala_x, escala_y):
-        escala_matriz = list()
-        for _ in range(len(self.__lista_poligono_customizado)):
-            escala_matriz.append(np.array([escala_x, escala_y]))
+    # TODO: Erro aqui
+    def aplicar_transformacao_com_acumulos(self, acumulo):
+        num_colunas = len(self.__lista_poligono_customizado[0])
+        for i in range(len(self.__lista_poligono_customizado)):
+            ponto_poligono = [self.__lista_poligono_customizado[i][0], self.__lista_poligono_customizado[i][1], 1]
+            ponto_poligono = transposta(ponto_poligono)
+            
+            ponto_poligono = [[0] * num_colunas for _ in range(1)]
+            for j in range(num_colunas):
+                for k in range(3):
+                    ponto_poligono[0][j] += acumulo[k][j] * self.__lista_poligono_customizado[i][k]
+            
+            ponto_poligono = transposta(ponto_poligono)
+            self.__lista_poligono_customizado[i][0], self.__lista_poligono_customizado[i][1] = ponto_poligono[0][0], ponto_poligono[1][0]
 
-        if not isinstance(self.__lista_poligono_customizado, np.ndarray):
-            self.__lista_poligono_customizado = np.array(self.__lista_poligono_customizado)
 
-        self.__lista_poligono_customizado[:, 0:2] = self.__lista_poligono_customizado[:, 0:2] * np.array(escala_matriz)
-
-        return self.__lista_poligono_customizado
-
-
-    @staticmethod
-    def mover_poligono(lista_poligono, translacao_x, translacao_y):
-        
-        translacao_matriz = list()
-
-        for _ in range(len(lista_poligono)):
-            translacao_matriz.append(np.array([translacao_x, translacao_y]))
-
-        if not isinstance(lista_poligono, np.ndarray):
-            lista_poligono = np.array(lista_poligono)
-
-        lista_poligono[:, 0:2] = lista_poligono[:, 0:2] + np.array(translacao_matriz)
-
-        return lista_poligono
-
+def transposta(matriz):
+    if isinstance(matriz[0], int) or len(matriz) == 1:
+        return matriz
     
+    linhas = len(matriz)
+    colunas = len(matriz[0])
+
+    transposta = [[0 for _ in range(linhas)] for _ in range(colunas)]
+    
+    for i in range(linhas):
+        for j in range(colunas):
+            transposta[j][i] = matriz[i][j]
+    
+    return transposta
+
+def multiplicacao_matrizes(matriz_1, matriz_2):
+    linha_1, coluna_1 = len(matriz_1), len(matriz_1[0])
+    linha_2, coluna_2 = len(matriz_2), len(matriz_2[0])
+    
+    if coluna_1 != linha_2:
+        raise ValueError("O número de colunas da matriz 1 deve ser o mesmo do número de linhas da matriz 2")
+    
+    resultado = [[0] * coluna_2 for _ in range(linha_1)]
+    
+    for i in range(linha_1):
+        for j in range(coluna_2):
+            for k in range(coluna_1):
+                resultado[i][j] += matriz_1[i][k] * matriz_2[k][j]
+    
+    return resultado

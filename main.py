@@ -54,7 +54,7 @@ def main():
         transformacao_bloco = Poligono.rotacionar_poligono(
             animacao_rotacao_degrade, transformacao_bloco)
         transformacao_bloco = Poligono.mover_poligono(350, 350, transformacao_bloco)
-        animacao_rotacao_degrade += 0.2
+        animacao_rotacao_degrade += 1
 
         bloco = Poligono(quadrado)
         poligono_custom = Poligono(lista_poligono_customizado)

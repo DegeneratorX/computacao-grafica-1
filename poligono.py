@@ -88,6 +88,7 @@ class Poligono:
             [0, 0,                            1]
         ], acumulo)
     
+    """
     # TODO: Erro aqui
     def aplicar_transformacao_com_acumulos(self, acumulo):
         num_colunas = len(self.__lista_poligono_customizado[0])
@@ -102,6 +103,20 @@ class Poligono:
             
             ponto_poligono = transposta(ponto_poligono)
             self.__lista_poligono_customizado[i][0], self.__lista_poligono_customizado[i][1] = ponto_poligono[0][0], ponto_poligono[1][0]
+    """
+    def aplicar_transformacao_com_acumulos(self, acumulo):
+        self.__lista_poligono_customizado = np.array(self.__lista_poligono_customizado)
+        
+        for i in range(self.__lista_poligono_customizado.shape[0]):
+            ponto_poligono = np.concatenate((self.__lista_poligono_customizado[i, :2], [1]))
+            ponto_poligono = np.transpose(ponto_poligono)
+            
+            ponto_poligono = np.dot(acumulo, ponto_poligono)
+            
+            ponto_poligono = np.transpose(ponto_poligono)
+            self.__lista_poligono_customizado[i, :2] = ponto_poligono[:2]
+        
+        return self.__lista_poligono_customizado.tolist()  # Convert back to a Python list before returning
 
 
 def transposta(matriz):

@@ -116,7 +116,7 @@ class Poligono:
             ponto_poligono = np.transpose(ponto_poligono)
             self.__lista_poligono_customizado[i, :2] = ponto_poligono[:2]
         
-        return self.__lista_poligono_customizado.tolist()  # Convert back to a Python list before returning
+        return self.__lista_poligono_customizado.tolist()
 
 
 def transposta(matriz):

@@ -88,22 +88,7 @@ class Poligono:
             [0, 0,                            1]
         ], acumulo)
     
-    """
-    # TODO: Erro aqui
-    def aplicar_transformacao_com_acumulos(self, acumulo):
-        num_colunas = len(self.__lista_poligono_customizado[0])
-        for i in range(len(self.__lista_poligono_customizado)):
-            ponto_poligono = [self.__lista_poligono_customizado[i][0], self.__lista_poligono_customizado[i][1], 1]
-            ponto_poligono = transposta(ponto_poligono)
-            
-            ponto_poligono = [[0] * num_colunas for _ in range(1)]
-            for j in range(num_colunas):
-                for k in range(3):
-                    ponto_poligono[0][j] += acumulo[k][j] * self.__lista_poligono_customizado[i][k]
-            
-            ponto_poligono = transposta(ponto_poligono)
-            self.__lista_poligono_customizado[i][0], self.__lista_poligono_customizado[i][1] = ponto_poligono[0][0], ponto_poligono[1][0]
-    """
+    
     def aplicar_transformacao_com_acumulos(self, acumulo):
         self.__lista_poligono_customizado = np.array(self.__lista_poligono_customizado)
         
@@ -117,6 +102,31 @@ class Poligono:
             self.__lista_poligono_customizado[i, :2] = ponto_poligono[:2]
         
         return self.__lista_poligono_customizado.tolist()
+
+
+class Janela(Poligono):
+    def __init__(self, lista_poligono_customizado, lista_janela, lista_viewport) -> None:
+        super().__init__(lista_poligono_customizado)
+        self.lista_janela = lista_janela
+        self.lista_viewport = lista_viewport
+
+    def mapeia_janela(self):
+        largura_viewport = self.lista_viewport[0]
+        altura_viewport = self.lista_viewport[1]
+
+        x_inicial = self.lista_janela[0]
+        y_inicial = self.lista_janela[1]
+
+        x_final = self.lista_janela[2]
+        y_final = self.lista_janela[3]
+
+        matriz_mapeamento = [
+            [largura_viewport/(x_final-x_inicial),                0,                   -(x_inicial*largura_viewport)/(x_final-x_inicial)],
+            [               0,                    altura_viewport/(y_final-y_inicial),  -(y_inicial*altura_viewport)/(y_final-y_inicial)],
+            [               0,                                    0,                                             1                      ]
+        ]
+
+        return self.aplicar_transformacao_com_acumulos(self.__lista_poligono_customizado, matriz_mapeamento)
 
 
 def transposta(matriz):

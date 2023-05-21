@@ -68,7 +68,6 @@ class Screen:
     def update():
         pygame.display.update()
 
-
 class Color:
 
     def __init__(self, red, green, blue, alpha=255):

@@ -4,14 +4,14 @@ class Poligono:
     def __init__(self, lista_poligono_customizado=None):
         if lista_poligono_customizado is None:
             lista_poligono_customizado = []
-        self.__lista_poligono_customizado = lista_poligono_customizado
+        self._lista_poligono_customizado = lista_poligono_customizado
 
     @property
     def lista_poligono_customizado(self):
-        return self.__lista_poligono_customizado
+        return self._lista_poligono_customizado
 
     def insere_ponto(self, x, y):
-        self.__lista_poligono_customizado.append([x, y])
+        self._lista_poligono_customizado.append([x, y])
 
     # Quadrado
     @staticmethod
@@ -88,29 +88,55 @@ class Poligono:
             [0, 0,                            1]
         ], acumulo)
     
-    
+
     def aplicar_transformacao_com_acumulos(self, acumulo):
-        self.__lista_poligono_customizado = np.array(self.__lista_poligono_customizado)
+        self._lista_poligono_customizado = np.array(self._lista_poligono_customizado)
         
-        for i in range(self.__lista_poligono_customizado.shape[0]):
-            ponto_poligono = np.concatenate((self.__lista_poligono_customizado[i, :2], [1]))
+        for i in range(self._lista_poligono_customizado.shape[0]):
+            ponto_poligono = np.concatenate((self._lista_poligono_customizado[i, :2], [1]))
             ponto_poligono = np.transpose(ponto_poligono)
             
             ponto_poligono = np.dot(acumulo, ponto_poligono)
             
             ponto_poligono = np.transpose(ponto_poligono)
-            self.__lista_poligono_customizado[i, :2] = ponto_poligono[:2]
+            self._lista_poligono_customizado[i, :2] = ponto_poligono[:2]
         
-        return self.__lista_poligono_customizado.tolist()
+        return self._lista_poligono_customizado.tolist()
 
 
-class Janela(Poligono):
+class Projecao(Poligono):
     def __init__(self, lista_poligono_customizado, lista_janela, lista_viewport) -> None:
         super().__init__(lista_poligono_customizado)
         self.lista_janela = lista_janela
         self.lista_viewport = lista_viewport
 
-    def mapeia_janela(self):
+    def get_poligono_mapeado(self):
+        x_inicial_viewport = self.lista_viewport[0]
+        y_inicial_viewport = self.lista_viewport[1]
+
+        x_final_viewport = self.lista_viewport[2]
+        y_final_viewport = self.lista_viewport[3]
+
+        x_inicial_janela = self.lista_janela[0]
+        y_inicial_janela = self.lista_janela[1]
+
+        x_final_janela = self.lista_janela[2]
+        y_final_janela = self.lista_janela[3]
+
+        a = (x_final_viewport-x_inicial_viewport)/(x_final_janela-x_inicial_janela)
+        b = (y_final_viewport-y_inicial_viewport)/(y_final_janela-y_inicial_janela)
+
+        matriz_mapeamento = [
+            [a,    0,     x_inicial_viewport-a*x_inicial_janela],
+            [0,    b,     y_inicial_viewport-b*y_inicial_janela],
+            [0,    0,                        1                 ]
+        ]
+
+        return self.aplicar_transformacao_com_acumulos(matriz_mapeamento)
+
+    # DEPRECIADA: esse método é para viewport estática, o primeiro tipo que o yuri deu em sala.
+    """
+    def get_poligono_mapeado(self):
         largura_viewport = self.lista_viewport[0]
         altura_viewport = self.lista_viewport[1]
 
@@ -125,9 +151,8 @@ class Janela(Poligono):
             [               0,                    altura_viewport/(y_final-y_inicial),  -(y_inicial*altura_viewport)/(y_final-y_inicial)],
             [               0,                                    0,                                             1                      ]
         ]
-
-        return self.aplicar_transformacao_com_acumulos(self.__lista_poligono_customizado, matriz_mapeamento)
-
+        return self.aplicar_transformacao_com_acumulos(matriz_mapeamento)
+        """
 
 def transposta(matriz):
     if isinstance(matriz[0], int) or len(matriz) == 1:

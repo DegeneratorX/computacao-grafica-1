@@ -12,6 +12,12 @@ Como eu sei tudo sobre a janela, o tamanho da viewport, e eu só preciso saber c
 
 E portanto, sabemos agora a matriz de transformação da viewport que mapeia uma janela.
 
+Como usar essa matriz? Aplica uma transformação linear para cada vértice do polígono. Ou seja, aplica o produto em cada $[x, y, 1]$ da lista de vértices do polígono. Portanto terei um polígono novo transformado que caberá na viewport de forma proporcional baseado no que foi capturado na janela. Se eu quero fazer um recorte em todos os objetos dentro da janela, terei que fazer essa transformação linear para TODOS os objetos, e depois desenhar na tela os objetos transformados.
+
 Uma observação importante: um tamanho de janela 500x500 e viewport 500x500 basicamente fará com que a viewport represente esse recorte da janela de forma fidedigna, sem distorções, sendo uma proporção 1:1.
 
 > Nota: o uso da palavra "projeção" para representações 2D é incorreto, pois a projeção na verdade ocorre com câmeras, que serão abordadas nos tópicos sobre mundo em 3 dimensões. O conceito de janela em 2D está para a câmera em 3D, portanto são muito similares: é um recorte do mundo. Usei a palavra apenas de forma intuitiva.
+ 
+Para criar viewports múltiplas e dinâmicas posicionadas em qualquer lugar da tela, precisamos expandir o vetor da viewport para incluir as coordenadas iniciais.
+
+![](2023-05-21-15-17-13.png)

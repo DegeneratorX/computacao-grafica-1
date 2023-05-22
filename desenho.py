@@ -325,6 +325,8 @@ class Desenho:
                 pilha.append((x, y))
 
     def desenha_poligono(self, lista_poligono, color, scanline_color=None):
+        if not lista_poligono:
+            return
         x = lista_poligono[0][0]
         y = lista_poligono[0][1]
         for i in range(1, len(lista_poligono)):
@@ -608,8 +610,3 @@ class Desenho:
                     r, g, b = cor
 
                     self.__screen.set_pixel(pintar_pixel_em_x, y_da_scanline, Color(r, g, b))
-
-
-class Alfabeto:
-    def __init__(self, size) -> None:
-        self.__size = size

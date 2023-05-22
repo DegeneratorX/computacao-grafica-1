@@ -1,6 +1,35 @@
 import pygame
 from pygame.locals import *
 
+def start_game():
+    player_x = 400
+    player_y = 300
+    player_speed = 5
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                running = False
+
+        keys = pygame.key.get_pressed()
+        if keys[K_LEFT]:
+            player_x -= player_speed
+        if keys[K_RIGHT]:
+            player_x += player_speed
+        if keys[K_UP]:
+            player_y -= player_speed
+        if keys[K_DOWN]:
+            player_y += player_speed
+
+        screen.fill((0, 0, 0))  # Clear the screen
+        pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(player_x, player_y, 50, 50))  # Draw the player rectangle
+
+        pygame.display.update()
+        clock.tick(60)  # Limit the frame rate to 60 FPS
+
+    pygame.quit()
+
 def draw_menu():
     screen.fill((0, 0, 0))  # Clear the screen
     font = pygame.font.Font(None, 36)  # Create a font object
@@ -34,6 +63,7 @@ while running:
             elif event.key == K_RETURN:
                 if selected_option == 0:  # Play option selected
                     print("Starting the game...")
+                    start_game()
                     # Add your game code here
                 elif selected_option == 1:  # Exit option selected
                     print("Exiting the game...")
@@ -44,3 +74,4 @@ while running:
     clock.tick(60)  # Limit the frame rate to 60 FPS
 
 pygame.quit()
+

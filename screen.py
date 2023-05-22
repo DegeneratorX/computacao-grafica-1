@@ -15,13 +15,14 @@ class Screen:
         self.__screen = pygame.display.set_mode(
             (self.__width, self.__height), pygame.RESIZABLE)
 
+    # Método que eu pego a screen para que eu possa fazer alterações nela na main caso eu deseje.
+
     def get_width(self):
         return self.__width
     
     def get_height(self):
         return self.__height
 
-    # Método que eu pego a screen para que eu possa fazer alterações nela na main caso eu deseje.
     def get_screen(self):
         return self.__screen
 
@@ -171,6 +172,9 @@ class Viewport:
     def get_conjunto_poligonos_cortados(self, indice=0):
         return self._conjunto_poligonos_cortados[indice]
 
+    def get_conjunto_poligonos_cortados_sem_indice(self):
+        return self._conjunto_poligonos_cortados
+
     def get_conjunto_poligonos_cores(self, indice=0):
         return self._conjunto_poligonos_cores[indice]
 
@@ -188,11 +192,11 @@ class Viewport:
 
         t = (scan - xf)/(xi - xf)
 
-        if 1 >= t > 0:
+        if 1 >= t >= 0:
             poly = yf + t*(yi - yf)
             return poly, t
         else:
-            return -1, -1
+            return -1, t
         
     def __intersecao_em_y(self, scan, pi, pf):
         xi, yi = pi
@@ -212,11 +216,11 @@ class Viewport:
 
         t = (scan - yf)/(yi - yf)
 
-        if 1 >= t > 0:
+        if 1 >= t >= 0:
             polx = xf + t*(xi - xf)
             return polx, t
         else:
-            return -1, -1
+            return -1, t
 
     def __corta_aresta(self, aresta, corte, axis, cor1, cor2, bin1, bin2):
         pi, pf = aresta
@@ -237,8 +241,8 @@ class Viewport:
             if len(cor1) == 2:
                 s1, t1 = cor1
                 s2, t2 = cor2
-                s = ((abs(s1 - s2) * t) + min(s1, s2))
-                t = ((abs(t1 - t2) * t) + min(t1, t2))
+                s = s1 * t + s2 * (1 - t)
+                t = t1 * t + t2 * (1 - t)
                 cor = (s, t)
             else:
                 r1, g1, b1, a1 = cor1
@@ -275,8 +279,8 @@ class Viewport:
             if len(cor1) == 2:
                 s1, t1 = cor1
                 s2, t2 = cor2
-                s = ((abs(s1 - s2) * t) + min(s1, s2))
-                t = ((abs(t1 - t2) * t) + min(t1, t2))
+                s = s1 * t + s2 * (1 - t)
+                t = t1 * t + t2 * (1 - t)
                 cor = (s, t)
             else:
                 r1, g1, b1, a1 = cor1
@@ -308,11 +312,11 @@ class Viewport:
         bd = '0'
         if px < self._x_inicial:
             bd = '1'
-        elif px > self._largura:
+        elif px > self._largura + self._x_inicial:
             bb = '1'
         if py < self._y_inicial:
             bc = '1'
-        elif py > self._altura:
+        elif py > self._altura + self._y_inicial:
             ba = '1'
         return ba, bb, bc, bd
 
@@ -357,13 +361,13 @@ class Viewport:
                                                             polcores[a+1], polbin[a], polbin[a+1])
                     xp, yp = ar
                     xpi, ypi = xp
-                    if xpi != -1:
+                    if xpi != -1 and xp != yp:
                         tempar.append(ar)
                         tempbin.append(bins)
                         tempcores.append(cores)
-                if not arestas:
-                    break
                 arestas = []
+                if not tempar or len(tempar) == 1:
+                    break
                 polbin = []
                 polcores = []
                 arestas.append(tempar[0])
@@ -404,7 +408,6 @@ class Viewport:
                     if len(polcores[a]) == 2:
                         tx, ty = polcores[a]
                         newpol.insere_ponto(round(xi), round(yi), tx, ty)
-                        return None
                     else:
                         r, g, b, alpha = polcores[a]
                         matriz_cores.append(Color(r, g, b, alpha))

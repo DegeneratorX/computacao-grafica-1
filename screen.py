@@ -15,8 +15,13 @@ class Screen:
         self.__screen = pygame.display.set_mode(
             (self.__width, self.__height), pygame.RESIZABLE)
 
-    # Método que eu pego a screen para que eu possa fazer alterações nela na main caso eu deseje.
+    def get_width(self):
+        return self.__width
+    
+    def get_height(self):
+        return self.__height
 
+    # Método que eu pego a screen para que eu possa fazer alterações nela na main caso eu deseje.
     def get_screen(self):
         return self.__screen
 

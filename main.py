@@ -11,8 +11,8 @@ def main():
     VIEWPORT = [0, 0, 800, 600]
     JANELA = [0, 0, 800, 600]
 
-    WINDOW_WIDTH = 600
-    WINDOW_HEIGHT = 525
+    WINDOW_WIDTH = 256
+    WINDOW_HEIGHT = 224
 
     screen_object = Screen(WINDOW_WIDTH, WINDOW_HEIGHT, Color(255, 255, 255))
     pygame.display.set_caption("Super Dude World")
@@ -33,14 +33,7 @@ def main():
         textura = Texture("gato.jpg")
         font_tiles = Texture("font.png")
 
-        retangulo = [
-            [100, 100, 0, 0],
-            [228, 100, 1, 0],
-            [228, 116, 1, 1],
-            [100, 116, 0, 1],
-        ]
-
-        Al
+        desenha_titulo(desenhar_na_screen)
         #bloco_mapeado = Projecao(retangulo, [0, 0, 100, 100], [100, 100, 300, 300])
         #desenhar_na_screen.desenha_poligono(bloco_mapeado.get_poligono_mapeado(), Color(0,0,0,0), textura)
         #viewport_objeto = Viewport(100, 100, 300, 300, [bloco_mapeado])

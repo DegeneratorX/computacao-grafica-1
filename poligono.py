@@ -5,13 +5,18 @@ class Poligono:
         if lista_poligono_customizado is None:
             lista_poligono_customizado = []
         self._lista_poligono_customizado = lista_poligono_customizado
+        self._lista_poligono_mapeado = []
 
     @property
     def lista_poligono_customizado(self):
         return self._lista_poligono_customizado
 
-    def insere_ponto(self, x, y):
-        self._lista_poligono_customizado.append([x, y])
+    @property
+    def lista_poligono_mapeado(self):
+        return self._lista_poligono_mapeado
+
+    def insere_ponto(self, x, y, tx, ty):
+        self._lista_poligono_customizado.append([x, y, tx, ty])
 
     # Quadrado
     @staticmethod
@@ -131,8 +136,8 @@ class Projecao(Poligono):
             [0,    b,     y_inicial_viewport-b*y_inicial_janela],
             [0,    0,                        1                 ]
         ]
-
-        return self.aplicar_transformacao_com_acumulos(matriz_mapeamento)
+        self._lista_poligono_mapeado = self.aplicar_transformacao_com_acumulos(matriz_mapeamento)
+        return self._lista_poligono_mapeado
 
     # DEPRECIADA: esse método é para viewport estática, o primeiro tipo que o yuri deu em sala.
     """

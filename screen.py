@@ -1,5 +1,6 @@
 import pygame
 import numpy as np
+from poligono import *
 from PIL import Image
 
 class Screen:
@@ -149,3 +150,261 @@ class Texture:
         self.__texture = Image.open(path)
         self.__texture = self.__texture.convert("RGB")
         self.__texture_matrix = np.asarray(self.__texture)
+
+class Viewport:
+    def __init__(self, x_inicial, y_inical, x_final, y_final ,conjunto_poligonos=None) -> None:
+        if conjunto_poligonos == None:
+            conjunto_poligonos = []
+        self._conjunto_poligonos = conjunto_poligonos
+        self._conjunto_poligonos_cortados = []
+        self._conjunto_poligonos_cores = []
+        self._x_inicial = x_inicial
+        self._y_inicial = y_inical
+        self._largura = x_final-x_inicial
+        self._altura = y_final-y_inical
+
+    def get_conjunto_poligonos_cortados(self, indice=0):
+        return self._conjunto_poligonos_cortados[indice]
+
+    def get_conjunto_poligonos_cores(self, indice=0):
+        return self._conjunto_poligonos_cores[indice]
+
+    def __intersecao_em_x(self, scan, pi, pf):
+        xi, yi = pi
+        xf, yf = pf
+        if xi == xf:
+            return -1, -1
+        if xi < xf:
+            yi, yf = yf, yi
+            xi, xf = xf, xi
+
+        if (xf - xi) == 0:
+            return -1, -1
+
+        t = (scan - xf)/(xi - xf)
+
+        if 1 >= t > 0:
+            poly = yf + t*(yi - yf)
+            return poly, t
+        else:
+            return -1, -1
+        
+    def __intersecao_em_y(self, scan, pi, pf):
+        xi, yi = pi
+        xf, yf = pf
+        if yi == yf:
+            return -1, -1
+        if yi < yf:
+            aux = yi
+            yi = yf
+            yf = aux
+            aux = xi
+            xi = xf
+            xf = aux
+
+        if (yf - yi) == 0:
+            return -1, -1
+
+        t = (scan - yf)/(yi - yf)
+
+        if 1 >= t > 0:
+            polx = xf + t*(xi - xf)
+            return polx, t
+        else:
+            return -1, -1
+
+    def __corta_aresta(self, aresta, corte, axis, cor1, cor2, bin1, bin2):
+        pi, pf = aresta
+        xi, yi = pi
+        xf, yf = pf
+
+        if axis == 'y':
+            par, t = self.__intersecao_em_x(corte, pi, pf)
+            if xf > xi:
+                t = 1 - t
+            if t > 1 or t < 0:
+                if corte == self._largura + self._x_inicial and bin1[1] == '1':
+                    return ((-1, -1), (-1, -1)), -1, -1
+                elif corte == self._x_inicial and bin1[3] == '1':
+                    return ((-1, -1), (-1, -1)), -1, -1
+                else:
+                    return (pi, pf), (bin1, bin2), (cor1, cor2)
+            if len(cor1) == 2:
+                s1, t1 = cor1
+                s2, t2 = cor2
+                s = ((abs(s1 - s2) * t) + min(s1, s2))
+                t = ((abs(t1 - t2) * t) + min(t1, t2))
+                cor = (s, t)
+            else:
+                r1, g1, b1, a1 = cor1
+                r2, g2, b2, a2 = cor2
+                r = r1 * t + r2 * (1 - t)
+                g = g1 * t + g2 * (1 - t)
+                b = b1 * t + b2 * (1 - t)
+                cor = (r, g, b, a1)
+            if corte == self._largura + self._x_inicial:
+                if bin1[1] == '1':
+                    a, b, c, d = bin1
+                    return ((corte, par), pf), ((a, '0', c, d), bin2), (cor, cor2)
+                else:
+                    a, b, c, d = bin2
+                    return (pi, (corte, par)), (bin1, (a, '0', c, d)), (cor1, cor)
+            if corte == self._x_inicial:
+                if bin1[3] == '1':
+                    a, b, c, d = bin1
+                    return ((corte, par), pf), ((a, b, c, '0'), bin2), (cor, cor2)
+                else:
+                    a, b, c, d = bin2
+                    return (pi, (corte, par)), (bin1, (a, b, c, '0')), (cor1, cor)
+        else:
+            par, t = self.__intersecao_em_y(corte, pi, pf)
+            if yf > yi:
+                t = 1 - t
+            if t > 1 or t < 0:
+                if corte == self._altura + self._y_inicial and bin1[0] == '1':
+                    return ((-1, -1), (-1, -1)), -1, -1
+                elif corte == self._y_inicial and bin1[2] == '1':
+                    return ((-1, -1), (-1, -1)), -1, -1
+                else:
+                    return (pi, pf), (bin1, bin2), (cor1, cor2)
+            if len(cor1) == 2:
+                s1, t1 = cor1
+                s2, t2 = cor2
+                s = ((abs(s1 - s2) * t) + min(s1, s2))
+                t = ((abs(t1 - t2) * t) + min(t1, t2))
+                cor = (s, t)
+            else:
+                r1, g1, b1, a1 = cor1
+                r2, g2, b2, a2 = cor2
+                r = r1 * t + r2 * (1 - t)
+                g = g1 * t + g2 * (1 - t)
+                b = b1 * t + b2 * (1 - t)
+                cor = (r, g, b, a1)
+            if corte == self._altura + self._y_inicial:
+                if bin1[0] == '1':
+                    a, b, c, d = bin1
+                    return ((par, corte), pf), (('0', b, c, d), bin2), (cor, cor2)
+                else:
+                    a, b, c, d = bin2
+                    return (pi, (par, corte)), (bin1, ('0', b, c, d)), (cor1, cor)
+            if corte == self._y_inicial:
+                if bin1[2] == '1':
+                    a, b, c, d = bin1
+                    return ((par, corte), pf), ((a, b, '0', d), bin2), (cor, cor2)
+                else:
+                    a, b, c, d = bin2
+                    return (pi, (par, corte)), (bin1, (a, b, '0', d)), (cor1, cor)
+                
+    def __calcula_bin(self, ponto):
+        px, py = ponto
+        ba = '0'
+        bb = '0'
+        bc = '0'
+        bd = '0'
+        if px < self._x_inicial:
+            bd = '1'
+        elif px > self._largura:
+            bb = '1'
+        if py < self._y_inicial:
+            bc = '1'
+        elif py > self._altura:
+            ba = '1'
+        return ba, bb, bc, bd
+
+    def update_viewport(self, scanline_color=None):
+        self._conjunto_poligonos_cores = []
+        self._conjunto_poligonos_cortados = []
+        loop_tuple = (self._altura + self._y_inicial, self._largura + self._x_inicial, self._y_inicial, self._x_inicial)
+        polbin = []
+
+        for index, pol in enumerate(self._conjunto_poligonos):
+            arestas = []
+            lista_vertices = [(linha[0], linha[1]) for linha in pol.lista_poligono_mapeado]
+            for vertice in range(len(lista_vertices)):
+                if vertice > 0:
+                    arestas.append((lista_vertices[vertice - 1], lista_vertices[vertice]))
+                    if vertice == len(lista_vertices) - 1:
+                        arestas.append((lista_vertices[vertice], lista_vertices[0]))
+                polbin.append(self.__calcula_bin(lista_vertices[vertice]))
+
+            if scanline_color is None:
+                preenchimento = [(linha[2], linha[3]) for linha in pol.lista_poligono_customizado]
+            else:
+                preenchimento = []
+                for i in range(len(scanline_color[index])):
+                    preenchimento.append(scanline_color[index][i].get_rgba())
+
+            polcores = preenchimento
+            tempcores = []
+            tempbin = []
+            tempar = []
+            for inter in range(len(loop_tuple)):
+                if inter % 2 == 0:
+                    axis = 'x'
+                else:
+                    axis = 'y'
+                for a in range(len(arestas)):
+                    if a == len(arestas) - 1:
+                        ar, bins, cores = self.__corta_aresta(arestas[a], loop_tuple[inter], axis, polcores[a],
+                                                            polcores[0], polbin[a], polbin[0])
+                    else:
+                        ar, bins, cores = self.__corta_aresta(arestas[a], loop_tuple[inter], axis, polcores[a],
+                                                            polcores[a+1], polbin[a], polbin[a+1])
+                    xp, yp = ar
+                    xpi, ypi = xp
+                    if xpi != -1:
+                        tempar.append(ar)
+                        tempbin.append(bins)
+                        tempcores.append(cores)
+                if not arestas:
+                    break
+                arestas = []
+                polbin = []
+                polcores = []
+                arestas.append(tempar[0])
+                bin1, bin2 = tempbin[0]
+                polbin.append(bin1)
+                cor1, cor2 = tempcores[0]
+                polcores.append(cor1)
+                for a in range(len(tempar)):
+                    pi, pf = tempar[a]
+                    xf, yf = pf
+                    bin1, bin2 = tempbin[a]
+                    cor1, cor2 = tempcores[a]
+                    if a == len(tempar) - 1:
+                        xpi, xpf = tempar[0]
+                    else:
+                        xpi, xpf = tempar[a+1]
+                    xxpi, yxpi = xpi
+                    if xf != xxpi or yf != yxpi:
+                        arestas.append(((xf, yf), (xxpi, yxpi)))
+                        polbin.append(bin2)
+                        polcores.append(cor2)
+                    if a != len(tempar) - 1:
+                        arestas.append(tempar[a + 1])
+                        bin1, bin2 = tempbin[a + 1]
+                        cor1, cor2 = tempcores[a + 1]
+                        polbin.append(bin1)
+                        polcores.append(cor1)
+                tempar = []
+                tempbin = []
+                tempcores = []
+            newpol = Poligono()
+
+            if arestas:
+                matriz_cores = []
+                for a in range(len(arestas)):
+                    pi, pf = arestas[a]
+                    xi, yi = pi
+                    if len(polcores[a]) == 2:
+                        tx, ty = polcores[a]
+                        newpol.insere_ponto(round(xi), round(yi), tx, ty)
+                        return None
+                    else:
+                        r, g, b, alpha = polcores[a]
+                        matriz_cores.append(Color(r, g, b, alpha))
+                        newpol.insere_ponto(round(xi), round(yi), 0, 0)
+                        if a == len(arestas)-1:
+                            self._conjunto_poligonos_cores.append(matriz_cores)
+                    
+            self._conjunto_poligonos_cortados.append(newpol)

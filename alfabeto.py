@@ -1,11 +1,13 @@
-class Alfabeto:
-    def __init__(self, size) -> None:
-        self.__size = size
+from desenho import Desenho
+from screen import *
 
-    def poligonos_palavra(self, origem, palavra:str):
-        # Ler a string passada e transformar a palavra em polígonos com suas 
-        # respectivas letras
-        for i in range(len(palavra)):
-            if palavra[i].upper() == "A":
-                # desenhar polígono A
-                pass
+class Alfabeto:
+    @staticmethod
+    def letra_s(x_origem, y_origem):
+        lista_poligono = [
+            [x_origem, y_origem, 0, 0],
+            [x_origem+16, y_origem, 0, 0],
+            [x_origem+16, y_origem+3, 0, 0],
+            [x_origem+4, y_origem+3, 0, 0]
+        ]
+        return lista_poligono

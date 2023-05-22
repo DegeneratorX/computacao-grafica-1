@@ -608,3 +608,8 @@ class Desenho:
                     r, g, b = cor
 
                     self.__screen.set_pixel(pintar_pixel_em_x, y_da_scanline, Color(r, g, b))
+
+
+class Alfabeto:
+    def __init__(self, size) -> None:
+        self.__size = size

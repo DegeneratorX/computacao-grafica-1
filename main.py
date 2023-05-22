@@ -1,4 +1,5 @@
 import pygame
+from pygame.locals import *
 from desenho import *
 from poligono import *
 from screen import *
@@ -17,53 +18,76 @@ def main():
     screen_object = Screen(WINDOW_WIDTH, WINDOW_HEIGHT, Color(255, 255, 255))
     pygame.display.set_caption("Super Dude World")
 
-    # player = Player()
-    # conjunto_sprites = pygame.sprite.Group()
-    # conjunto_sprites.add(player)
+    opcoes_menu = ["Jogar", "Sair"]
+    opcao_selecionada = 0
 
-    while True:
+    running = True
+    jogo = True
+    while running:
         clock = pygame.time.Clock()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 break
+
+            if event.type == KEYDOWN:
+                if event.key == K_UP:
+                    opcao_selecionada = (opcao_selecionada - 1) % len(opcoes_menu)  # Move up through the options
+                elif event.key == K_DOWN:
+                    opcao_selecionada = (opcao_selecionada + 1) % len(opcoes_menu)  # Move down through the options
+                elif event.key == K_RETURN:
+                    if opcao_selecionada == 0:
+                        print("Começando o jogo...")
+                    elif opcao_selecionada == 1:
+                        print("Saíndo...")
+                        running = False
+
         screen_object.clear_screen()
         desenhar_na_screen = Desenho(screen_object)
+        
+        if opcao_selecionada == 0:
+            desenhar_na_screen.circunferencia(90, 154, 4, Color(200, 0,0,0))
+            desenhar_na_screen.flood_fill_iterativo(90, 154, Color(255,58,58))
+        else:
+            desenhar_na_screen.circunferencia(90, 170, 4, Color(200, 0,0,0))
+            desenhar_na_screen.flood_fill_iterativo(90, 170, Color(255,58,58))
 
         textura = Texture("gato.jpg")
         font_tiles = Texture("font.png")
 
         desenha_titulo(desenhar_na_screen)
-        #bloco_mapeado = Projecao(retangulo, [0, 0, 100, 100], [100, 100, 300, 300])
-        #desenhar_na_screen.desenha_poligono(bloco_mapeado.get_poligono_mapeado(), Color(0,0,0,0), textura)
-        #viewport_objeto = Viewport(100, 100, 300, 300, [bloco_mapeado])
-        #viewport_objeto.update_viewport()
-        #desenhar_na_screen.desenha_poligono(
-        #    viewport_objeto.get_conjunto_poligonos_cortados(0).lista_poligono_customizado, Color(0, 0, 0, 0), textura)
 
         screen_object.update()
         clock.tick(60)
 
+def começar_jogo():
+    player_x = 400
+    player_y = 300
+    player_speed = 5
 
-def lista_poligonos_separar(lista_poligono):
-    lista_vertices = [(linha[0], linha[1]) for linha in lista_poligono]
-    lista_texturas = [(linha[2], linha[3]) for linha in lista_poligono]
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                running = False
 
-    return lista_vertices, lista_texturas
+        keys = pygame.key.get_pressed()
+        if keys[K_LEFT]:
+            player_x -= player_speed
+        if keys[K_RIGHT]:
+            player_x += player_speed
+        if keys[K_UP]:
+            player_y -= player_speed
+        if keys[K_DOWN]:
+            player_y += player_speed
 
-def coordenadas_viewport(viewport):
-    x_inicial = viewport[0]
-    y_inicial = viewport[1]
-    largura_viewport = viewport[2]-viewport[0]
-    altura_viewport  = viewport[3]-viewport[1]
+        screen.fill((0, 0, 0))  # Clear the screen
+        pygame.draw.rect(screen, (255, 255, 255), pygame.Rect(player_x, player_y, 50, 50))  # Draw the player rectangle
 
-    return x_inicial, y_inicial, largura_viewport, altura_viewport
+        pygame.display.update()
+        clock.tick(60)  # Limit the frame rate to 60 FPS
 
-def converter_obj_cores_em_tuplas(lista_cores):
-    tupla_de_cores = []
-    for i in range(len(lista_cores)):
-        tupla_de_cores.append(lista_cores[i].get_rgba())
-    return tupla_de_cores
+    pygame.quit()
 
 if __name__ == '__main__':
     main()

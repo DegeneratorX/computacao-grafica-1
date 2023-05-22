@@ -23,9 +23,7 @@ def desenha_titulo(desenhar_na_screen):
     desenhar_na_screen.flood_fill_iterativo(174, 75, Color(170,220,255))
     desenhar_na_screen.flood_fill_iterativo(207, 77, Color(170,220,255))
 
-    desenhar_na_screen.circunferencia(90, 154, 4, Color(200, 0,0,0))
-    desenhar_na_screen.flood_fill_iterativo(90, 154, Color(255,58,58))
-    desenhar_na_screen.flood_fill_iterativo(0, 0, Color(255,200,200))
+
 
 def desenha_super(desenhar_na_screen):
     s = TitleScreen.letra_s(82,30)

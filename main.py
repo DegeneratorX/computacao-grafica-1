@@ -22,6 +22,7 @@ def iterar_lista_poligonos_cortados(desenhar_na_screen, conjunto_poligonos, text
             conjunto_poligonos[pol].lista_poligono_customizado, Color(0, 0, 0, 0), textura)
 """
 
+# TODO: Comparar o fps com degradê e textura
 # TODO: Criar uma matriz de screen externa para depois passar pra matriz de screen do pygame
 # TODO: Colocar objetos na tela
 # TODO: Substituir o sprite do player
@@ -120,7 +121,7 @@ def main():
                             ]
 
                             desenhar_na_screen.desenha_poligono(viewport_objeto.get_conjunto_poligonos_cortados(
-                                0).lista_poligono_customizado, Color(0, 0, 0, 0), lista_cores)
+                                0).lista_poligono_customizado, Color(0, 0, 0, 0), textura)
                             desenhar_na_screen.desenha_poligono(viewport_objeto.get_conjunto_poligonos_cortados(
                                 1).lista_poligono_customizado, Color(255, 255, 255), Color(255, 255, 255, 255))
                             # iterar_lista_poligonos_cortados(

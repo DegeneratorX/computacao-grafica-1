@@ -136,7 +136,6 @@ def main():
                             #    player_x-8, player_y-8, 16, 16))
                             pygame.display.update()
                             screen_object.get_screen().fill((0, 0, 0))
-
                             clock.tick(60)
 
                         pygame.quit()

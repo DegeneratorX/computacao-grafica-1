@@ -1,10 +1,19 @@
 import pygame
+import time
 from pygame.locals import *
 from desenho import *
 from poligono import *
 from screen import *
 from sprite import *
 from alfabeto import *
+
+
+def show_fps(screen, clock):
+    fps_font = pygame.font.Font(None, 20)
+    fps_text = fps_font.render(
+        "FPS: " + str(int(clock.get_fps())), True, pygame.Color("yellow"))
+    screen.get_screen().blit(fps_text, (10, 10))
+
 
 """
 def iterar_lista_poligonos_cortados(desenhar_na_screen, conjunto_poligonos, textura):
@@ -13,8 +22,14 @@ def iterar_lista_poligonos_cortados(desenhar_na_screen, conjunto_poligonos, text
             conjunto_poligonos[pol].lista_poligono_customizado, Color(0, 0, 0, 0), textura)
 """
 
-def main():
+# TODO: Criar uma matriz de screen externa para depois passar pra matriz de screen do pygame
+# TODO: Colocar objetos na tela
+# TODO: Substituir o sprite do player
+# TODO: Mudar o nome de alguma variáveis (especialmente as que estão em inglês)
 
+
+def main():
+    pygame.font.init()
     VIEWPORT = [0, 0, 256, 224]
     janela_x_inicial = 0
     janela_y_inicial = 0
@@ -87,8 +102,9 @@ def main():
                             bloco_mapeado = Projecao(bloco, janela, VIEWPORT)
                             bloco_mapeado.get_poligono_mapeado()
                             lista_de_mapeamentos.append(bloco_mapeado)
-                            
-                            player_sprite_mapeado = Projecao(player.get_player_sprite(), janela, VIEWPORT)
+
+                            player_sprite_mapeado = Projecao(
+                                player.get_player_sprite(), janela, VIEWPORT)
                             player_sprite_mapeado.get_poligono_mapeado()
                             lista_de_mapeamentos.append(player_sprite_mapeado)
 
@@ -97,19 +113,22 @@ def main():
                             viewport_objeto.update_viewport()
 
                             lista_cores = [
-                                Color(255,0,0,0),
-                                Color(0,255,0,0),
-                                Color(0,0,255,0),
-                                Color(255,255,255,0),
+                                Color(255, 0, 0, 0),
+                                Color(0, 255, 0, 0),
+                                Color(0, 0, 255, 0),
+                                Color(255, 255, 255, 0),
                             ]
 
-                            desenhar_na_screen.desenha_poligono(viewport_objeto.get_conjunto_poligonos_cortados(0).lista_poligono_customizado, Color(0, 0, 0, 0), lista_cores)
-                            desenhar_na_screen.desenha_poligono(viewport_objeto.get_conjunto_poligonos_cortados(1).lista_poligono_customizado, Color(255, 255, 255), Color(255,255,255,255))
-                            #iterar_lista_poligonos_cortados(
+                            desenhar_na_screen.desenha_poligono(viewport_objeto.get_conjunto_poligonos_cortados(
+                                0).lista_poligono_customizado, Color(0, 0, 0, 0), lista_cores)
+                            desenhar_na_screen.desenha_poligono(viewport_objeto.get_conjunto_poligonos_cortados(
+                                1).lista_poligono_customizado, Color(255, 255, 255), Color(255, 255, 255, 255))
+                            # iterar_lista_poligonos_cortados(
                             #    desenhar_na_screen, viewport_objeto.get_conjunto_poligonos_cortados_sem_indice(), textura)
 
-                            #pygame.draw.rect(screen_object.get_screen(), (255, 255, 255), pygame.Rect(
+                            # pygame.draw.rect(screen_object.get_screen(), (255, 255, 255), pygame.Rect(
                             #    player_x-8, player_y-8, 16, 16))
+                            show_fps(screen_object, clock)
                             pygame.display.update()
                             screen_object.get_screen().fill((0, 0, 0))
                             clock.tick(60)
@@ -133,6 +152,7 @@ def main():
                 90, 170, Color(255, 58, 58))
 
         desenha_titulo(desenhar_na_screen)
+
         screen_object.update()
         clock.tick(60)
 

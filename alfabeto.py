@@ -94,36 +94,36 @@ def desenha_world(desenhar_na_screen):
     desenhar_na_screen.flood_fill_iterativo(199, 67, Color(0,206,0))
 
 def desenha_jogar(desenhar_na_screen):
-    j = Font.letra_j(100,150)
+    j = Letra.letra_j(100,150)
     desenhar_na_screen.desenha_poligono(j, Color(0,0,0,0))
 
-    o_e, o_i = Font.letra_o(108,150)
+    o_e, o_i = Letra.letra_o(108,150)
     desenhar_na_screen.desenha_poligono(o_e, Color(0,0,0,0))
     desenhar_na_screen.desenha_poligono(o_i, Color(0,0,0,0))
 
-    g = Font.letra_g(116, 150)
+    g = Letra.letra_g(116, 150)
     desenhar_na_screen.desenha_poligono(g, Color(0,0,0,0))
 
-    a_e, a_i = Font.letra_a(124, 150)
+    a_e, a_i = Letra.letra_a(124, 150)
     desenhar_na_screen.desenha_poligono(a_e, Color(0,0,0,0))
     desenhar_na_screen.desenha_poligono(a_i, Color(0,0,0,0))
 
-    r_e, r_i = Font.letra_r(132, 150)
+    r_e, r_i = Letra.letra_r(132, 150)
     desenhar_na_screen.desenha_poligono(r_e, Color(0,0,0,0))
     desenhar_na_screen.desenha_poligono(r_i, Color(0,0,0,0))
 
 def desenha_sair(desenhar_na_screen):
-    s = Font.letra_s(100, 166)
+    s = Letra.letra_s(100, 166)
     desenhar_na_screen.desenha_poligono(s, Color(0,0,0,0))
     
-    a_e, a_i = Font.letra_a(108, 166)
+    a_e, a_i = Letra.letra_a(108, 166)
     desenhar_na_screen.desenha_poligono(a_e, Color(0,0,0,0))
     desenhar_na_screen.desenha_poligono(a_i, Color(0,0,0,0))
 
-    i = Font.letra_i(116, 166)
+    i = Letra.letra_i(116, 166)
     desenhar_na_screen.desenha_poligono(i, Color(0,0,0,0))
 
-    r_e, r_i = Font.letra_r(120, 166)
+    r_e, r_i = Letra.letra_r(120, 166)
     desenhar_na_screen.desenha_poligono(r_e, Color(0,0,0,0))
     desenhar_na_screen.desenha_poligono(r_i, Color(0,0,0,0))
 
@@ -295,7 +295,7 @@ class TitleScreen:
         return lista_poligono
     
 
-class Font:
+class Letra:
 
     @staticmethod
     def letra_a(x_origem, y_origem):

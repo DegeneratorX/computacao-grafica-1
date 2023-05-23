@@ -328,6 +328,7 @@ class Viewport:
 
         for index, pol in enumerate(self._conjunto_poligonos):
             arestas = []
+            polbin = []
             lista_vertices = [(linha[0], linha[1]) for linha in pol.lista_poligono_mapeado]
             for vertice in range(len(lista_vertices)):
                 if vertice > 0:

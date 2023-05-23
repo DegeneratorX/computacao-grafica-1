@@ -6,15 +6,22 @@ from screen import *
 from sprite import *
 from alfabeto import *
 
+"""
 def iterar_lista_poligonos_cortados(desenhar_na_screen, conjunto_poligonos, textura):
     for pol in range(len(conjunto_poligonos)):
-        desenhar_na_screen.desenha_poligono(conjunto_poligonos[pol].lista_poligono_customizado, Color(0, 0, 0, 0), textura)
-
+        desenhar_na_screen.desenha_poligono(
+            conjunto_poligonos[pol].lista_poligono_customizado, Color(0, 0, 0, 0), textura)
+"""
 
 def main():
 
     VIEWPORT = [0, 0, 256, 224]
-    JANELA = [0, 0, 150, 150]
+    janela_x_inicial = 0
+    janela_y_inicial = 0
+    janela_x_final = 256
+    janela_y_final = 224
+    janela = [janela_x_inicial, janela_y_inicial,
+              janela_x_final, janela_y_final]
 
     WINDOW_WIDTH = 256
     WINDOW_HEIGHT = 224
@@ -26,7 +33,6 @@ def main():
     opcao_selecionada = 0
     textura = Texture("tile.jpg")
     running = True
-    jogo = True
     while running:
         clock = pygame.time.Clock()
         for event in pygame.event.get():
@@ -36,15 +42,17 @@ def main():
 
             if event.type == KEYDOWN:
                 if event.key == K_UP:
-                    opcao_selecionada = (opcao_selecionada - 1) % len(opcoes_menu)  # Move up through the options
+                    opcao_selecionada = (
+                        opcao_selecionada - 1) % len(opcoes_menu)
                 elif event.key == K_DOWN:
-                    opcao_selecionada = (opcao_selecionada + 1) % len(opcoes_menu)  # Move down through the options
+                    opcao_selecionada = (
+                        opcao_selecionada + 1) % len(opcoes_menu)
                 elif event.key == K_RETURN:
                     if opcao_selecionada == 0:
                         print("Começando o jogo...")
 
-                        player_x = 10
-                        player_y = 10
+                        player_x = 128
+                        player_y = 112
                         player_speed = 5
 
                         running_game = True
@@ -56,31 +64,76 @@ def main():
                             keys = pygame.key.get_pressed()
                             if keys[K_LEFT]:
                                 player_x -= player_speed
+                                janela_x_inicial -= player_speed
+                                janela_x_final -= player_speed
                             if keys[K_RIGHT]:
                                 player_x += player_speed
+                                janela_x_inicial += player_speed
+                                janela_x_final += player_speed
                             if keys[K_UP]:
                                 player_y -= player_speed
+                                janela_y_inicial -= player_speed
+                                janela_y_final -= player_speed
                             if keys[K_DOWN]:
                                 player_y += player_speed
-                
-                            chao_do_jogo = list()
-                            for i in range(0,1000, 15):
-                                bloco = [
-                                    [0+i, 0, 0, 0],
-                                    [15+i, 0, 1, 0],
-                                    [15+i, 15, 1, 1],
-                                    [0+i, 15, 0, 1],
-                                ]
-                                bloco_mapeado = Projecao(bloco, JANELA, VIEWPORT)
-                                bloco_mapeado.get_poligono_mapeado()
-                                chao_do_jogo.append(bloco_mapeado)
+                                janela_y_inicial += player_speed
+                                janela_y_final += player_speed
 
-                            viewport_objeto = Viewport(0, 0, 256, 224, chao_do_jogo)
+                            janela = [janela_x_inicial, janela_y_inicial,
+                                      janela_x_final, janela_y_final]
+
+                            chao_do_jogo = list()
+                            """
+                            for i in range(0,1000, 15):
+                                for j in range(0, 1000, 15):
+                                    bloco = [
+                                        [0+i, 0+j, 0, 0],
+                                        [15+i, 0+j, 1, 0],
+                                        [15+i, 15+j, 1, 1],
+                                        [0+i, 15+j, 0, 1],
+                                    ]
+                                    bloco_mapeado = Projecao(bloco, JANELA, VIEWPORT)
+                                    bloco_mapeado.get_poligono_mapeado()
+                                    chao_do_jogo.append(bloco_mapeado)
+                            """
+                            player_sprite = [
+                                [player_x-8,player_y-8,0,0],
+                                [player_x+8,player_y-8,1,0],
+                                [player_x+8,player_y+8,1,1],
+                                [player_x-8,player_y+8,0,1],
+                            ]
+                            bloco = [
+                                [0, 0, 0, 0],
+                                [300, 0, 1, 0],
+                                [300, 300, 1, 1],
+                                [0, 300, 0, 1],
+                            ]
+                            bloco_mapeado = Projecao(bloco, janela, VIEWPORT)
+                            bloco_mapeado.get_poligono_mapeado()
+                            chao_do_jogo.append(bloco_mapeado)
+                            
+                            player_sprite_mapeado = Projecao(player_sprite, janela, VIEWPORT)
+                            player_sprite_mapeado.get_poligono_mapeado()
+                            chao_do_jogo.append(player_sprite_mapeado)
+
+                            viewport_objeto = Viewport(
+                                0, 0, 256, 224, chao_do_jogo)
                             viewport_objeto.update_viewport()
 
-                            iterar_lista_poligonos_cortados(desenhar_na_screen,viewport_objeto.get_conjunto_poligonos_cortados_sem_indice(), textura)
+                            lista_cores = [
+                                Color(255,0,0,0),
+                                Color(0,255,0,0),
+                                Color(0,0,255,0),
+                                Color(255,255,255,0),
+                            ]
 
-                            pygame.draw.rect(screen_object.get_screen(), (255, 255, 255), pygame.Rect(player_x, player_y, 50, 50))
+                            desenhar_na_screen.desenha_poligono(viewport_objeto.get_conjunto_poligonos_cortados(0).lista_poligono_customizado, Color(0, 0, 0, 0), lista_cores)
+                            desenhar_na_screen.desenha_poligono(viewport_objeto.get_conjunto_poligonos_cortados(1).lista_poligono_customizado, Color(255, 255, 255), Color(255,255,255,255))
+                            #iterar_lista_poligonos_cortados(
+                            #    desenhar_na_screen, viewport_objeto.get_conjunto_poligonos_cortados_sem_indice(), textura)
+
+                            #pygame.draw.rect(screen_object.get_screen(), (255, 255, 255), pygame.Rect(
+                            #    player_x-8, player_y-8, 16, 16))
                             pygame.display.update()
                             screen_object.get_screen().fill((0, 0, 0))
 
@@ -94,18 +147,17 @@ def main():
 
         screen_object.clear_screen()
         desenhar_na_screen = Desenho(screen_object)
-        
+
         if opcao_selecionada == 0:
-            desenhar_na_screen.circunferencia(90, 154, 4, Color(200, 0,0,0))
-            desenhar_na_screen.flood_fill_iterativo(90, 154, Color(255,58,58))
+            desenhar_na_screen.circunferencia(90, 154, 4, Color(200, 0, 0, 0))
+            desenhar_na_screen.flood_fill_iterativo(
+                90, 154, Color(255, 58, 58))
         else:
-            desenhar_na_screen.circunferencia(90, 170, 4, Color(200, 0,0,0))
-            desenhar_na_screen.flood_fill_iterativo(90, 170, Color(255,58,58))
+            desenhar_na_screen.circunferencia(90, 170, 4, Color(200, 0, 0, 0))
+            desenhar_na_screen.flood_fill_iterativo(
+                90, 170, Color(255, 58, 58))
 
-
-        font_tiles = Texture("font.png")
         desenha_titulo(desenhar_na_screen)
-
         screen_object.update()
         clock.tick(60)
 

@@ -54,7 +54,7 @@ def main():
                         player_x = 128
                         player_y = 112
                         player_speed = 5
-
+                        player = Player(player_x, player_y, player_speed)
                         running_game = True
                         while running_game:
                             for event in pygame.event.get():
@@ -62,27 +62,8 @@ def main():
                                     running_game = False
 
                             keys = pygame.key.get_pressed()
-                            if keys[K_LEFT]:
-                                player_x -= player_speed
-                                janela_x_inicial -= player_speed
-                                janela_x_final -= player_speed
-                            if keys[K_RIGHT]:
-                                player_x += player_speed
-                                janela_x_inicial += player_speed
-                                janela_x_final += player_speed
-                            if keys[K_UP]:
-                                player_y -= player_speed
-                                janela_y_inicial -= player_speed
-                                janela_y_final -= player_speed
-                            if keys[K_DOWN]:
-                                player_y += player_speed
-                                janela_y_inicial += player_speed
-                                janela_y_final += player_speed
-
-                            janela = [janela_x_inicial, janela_y_inicial,
-                                      janela_x_final, janela_y_final]
-
-                            chao_do_jogo = list()
+                            janela = player.mover(keys, janela)
+                            lista_de_mapeamentos = list()
                             """
                             for i in range(0,1000, 15):
                                 for j in range(0, 1000, 15):
@@ -96,12 +77,7 @@ def main():
                                     bloco_mapeado.get_poligono_mapeado()
                                     chao_do_jogo.append(bloco_mapeado)
                             """
-                            player_sprite = [
-                                [player_x-8,player_y-8,0,0],
-                                [player_x+8,player_y-8,1,0],
-                                [player_x+8,player_y+8,1,1],
-                                [player_x-8,player_y+8,0,1],
-                            ]
+
                             bloco = [
                                 [0, 0, 0, 0],
                                 [300, 0, 1, 0],
@@ -110,14 +86,14 @@ def main():
                             ]
                             bloco_mapeado = Projecao(bloco, janela, VIEWPORT)
                             bloco_mapeado.get_poligono_mapeado()
-                            chao_do_jogo.append(bloco_mapeado)
+                            lista_de_mapeamentos.append(bloco_mapeado)
                             
-                            player_sprite_mapeado = Projecao(player_sprite, janela, VIEWPORT)
+                            player_sprite_mapeado = Projecao(player.get_player_sprite(), janela, VIEWPORT)
                             player_sprite_mapeado.get_poligono_mapeado()
-                            chao_do_jogo.append(player_sprite_mapeado)
+                            lista_de_mapeamentos.append(player_sprite_mapeado)
 
                             viewport_objeto = Viewport(
-                                0, 0, 256, 224, chao_do_jogo)
+                                0, 0, 256, 224, lista_de_mapeamentos)
                             viewport_objeto.update_viewport()
 
                             lista_cores = [

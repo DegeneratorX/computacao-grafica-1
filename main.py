@@ -31,7 +31,14 @@ def iterar_lista_poligonos_cortados(desenhar_na_screen, conjunto_poligonos, text
 
 def main():
     pygame.font.init()
-    VIEWPORT = [0, 0, 256, 224]
+
+    viewport_x_inicial = 0
+    viewport_y_inicial = 0
+    viewport_x_final = 256
+    viewport_y_final = 224
+    VIEWPORT = [viewport_x_inicial, viewport_y_inicial,
+                viewport_x_final, viewport_y_final]
+
     janela_x_inicial = 0
     janela_y_inicial = 0
     janela_x_final = 256
@@ -49,6 +56,7 @@ def main():
     opcao_selecionada = 0
     textura = Texture("tile.jpg")
     running = True
+    rotacao = 0
     while running:
         clock = pygame.time.Clock()
         for event in pygame.event.get():
@@ -104,13 +112,34 @@ def main():
                             bloco_mapeado.get_poligono_mapeado()
                             lista_de_mapeamentos.append(bloco_mapeado)
 
+                            trapezio = [
+                                [50, 50, 0, 0],
+                                [70, 50, 1, 0],
+                                [80, 100, 1, 1],
+                                [40, 100, 0, 1],
+                            ]
+
+                            trapezio_objeto = Poligono(trapezio)
+
+                            if rotacao < 360:
+                                acumulo = Poligono.mover_poligono(-50,-50)
+                                acumulo = Poligono.rotacionar_poligono(rotacao, acumulo)
+                                acumulo = Poligono.mover_poligono(+50,+50, acumulo)
+                                trapezio_objeto.aplicar_transformacao_com_acumulos(acumulo)
+                                trapezio_objeto_mapeado = Projecao(trapezio_objeto.lista_poligono_customizado, janela, VIEWPORT)
+                                trapezio_objeto_mapeado.get_poligono_mapeado()
+                                lista_de_mapeamentos.append(trapezio_objeto_mapeado)
+                            else:
+                                rotacao = -1
+                            rotacao += 1
+                            
                             player_sprite_mapeado = Projecao(
                                 player.get_player_sprite(), janela, VIEWPORT)
                             player_sprite_mapeado.get_poligono_mapeado()
                             lista_de_mapeamentos.append(player_sprite_mapeado)
-
+                            
                             viewport_objeto = Viewport(
-                                0, 0, 256, 224, lista_de_mapeamentos)
+                                viewport_x_inicial, viewport_y_inicial, viewport_x_final, viewport_y_final, lista_de_mapeamentos)
                             viewport_objeto.update_viewport()
 
                             lista_cores = [
@@ -121,17 +150,26 @@ def main():
                             ]
 
                             desenhar_na_screen.desenha_poligono(viewport_objeto.get_conjunto_poligonos_cortados(
-                                0).lista_poligono_customizado, Color(0, 0, 0, 0), textura)
+                                0).lista_poligono_customizado, Color(0, 0, 0, 0), Color(200,100,100,0))
                             desenhar_na_screen.desenha_poligono(viewport_objeto.get_conjunto_poligonos_cortados(
                                 1).lista_poligono_customizado, Color(255, 255, 255), Color(255, 255, 255, 255))
+                            desenhar_na_screen.desenha_poligono(viewport_objeto.get_conjunto_poligonos_cortados(
+                                    2).lista_poligono_customizado, Color(255, 255, 255), Color(255, 255, 255, 255))
+
                             # iterar_lista_poligonos_cortados(
                             #    desenhar_na_screen, viewport_objeto.get_conjunto_poligonos_cortados_sem_indice(), textura)
 
                             # pygame.draw.rect(screen_object.get_screen(), (255, 255, 255), pygame.Rect(
                             #    player_x-8, player_y-8, 16, 16))
+
                             show_fps(screen_object, clock)
                             pygame.display.update()
-                            screen_object.get_screen().fill((0, 0, 0))
+
+                            for i in range(viewport_y_final):
+                                for j in range(viewport_x_final):
+                                    screen_object.get_screen().set_at((j, i), (180,230,255,0))
+
+                            # screen_object.get_screen().fill((0, 0, 0))
                             clock.tick(60)
 
                         pygame.quit()

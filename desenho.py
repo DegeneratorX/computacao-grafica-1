@@ -297,7 +297,7 @@ class Desenho:
     def flood_fill_iterativo(self, x_setar, y_setar, cor_nova):
         # Capturo a cor que cliquei
         cor_inicial = self.__screen.get_pixel(x_setar, y_setar)
-        if cor_inicial == cor_nova:  # Se for a mesma cor que quero colocar, faz nada.
+        if cor_inicial == cor_nova.get_rgba():  # Se for a mesma cor que quero colocar, faz nada.
             self.__screen.set_pixel(x_setar, y_setar, cor_nova)
             return
 
@@ -436,6 +436,7 @@ class Desenho:
                 # ===========================================
 
                 # Preciso pintar todos os pixels no intervalo de um ponto de interseção ao seguinte
+
                 for pintar_pixel_em_x in range(i[ponto_intersecao], i[ponto_intersecao+1]):
                     self.__screen.set_pixel(
                         pintar_pixel_em_x, y_da_scanline, color)

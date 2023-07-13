@@ -139,9 +139,10 @@ São utilizadas múltiplas cópias de agentes, os melhores sobrevivem, se adapta
 Todas essas soluções anteriores possuem algo em comum: sensores, que enxergam.
 
 Essas soluções são comparadas com a diversidade evolutiva na vida real:
-    - o surgimento dos olhos foi uma nova dinâmica entre predadores e presas
-    - Olhos na frente do crânio costumam ser associados a animais predadores no reino animal. Ajudam na focalização de uma presa.
-    - Olhos nas laterais do crânio costumam ser associados aos animais herbívoros, muitas vezes sendo a presa de animais predadores. Funcionam como sentinela, e ajudam no escape de predadores.
+
+- O surgimento dos olhos foi uma nova dinâmica entre predadores e presas
+- Olhos na frente do crânio costumam ser associados a animais predadores no reino animal. Ajudam na focalização de uma presa.
+- Olhos nas laterais do crânio costumam ser associados aos animais herbívoros, muitas vezes sendo a presa de animais predadores. Funcionam como sentinela, e ajudam no escape de predadores.
 
 Um desafio nos campos de pesquisa de inteligência artificial seria o uso do Córtex Visual Artificial, que gera uma forte conexão entre a mente e o ambiente ao qual o agente está localizado. É um avanço na inteligência artificial que permite que robôs interajam com o mundo real assim como humanos. E poderia não ser diferente quando agentes visualizam um ambiente virtual. Uma das features seria o uso da visão do agente, que funciona como uma câmera virtual acoplada, que recebe inputs visuais de alta dimensão desse ambiente para tomar decisões.
 

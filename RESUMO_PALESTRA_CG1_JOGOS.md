@@ -80,11 +80,11 @@ Todo NPC possui minimamente em um jogo de qualidade:
 
 O nosso problema principal é tentar pular esse vale da estranheza. O uso de ifs e elses não gera comportamentos complexos. Na verdade pode aumentar a complexidade do problema. A ideia seria simplificar a geração de comportamentos complexos. Como fazer isso?
 
-## Regras
+### Regras
 
 A ideia de criar regras para um NPC ou entidade não gera comportamentos elaborados, pois para isso seria preciso criar milhares, se não centenas de milhares de regras para chegar próximo do comportamento humano.
 
-## Aprendizado
+### Aprendizado
 
 A ideia de aprendizado de máquina é muito boa, porém para criar uma boa base de dados baseado no que apenas um NPC aprendeu pode levar tempo e um alto custo de memória, e mesmo nessa época de corridas da inteligência artificial, nenhum jogo foi capaz de levar isso pra frente com tanta ênfase, pois ainda existem muitos fatores limitantes.
 
@@ -92,7 +92,7 @@ A ideia de aprendizado de máquina é muito boa, porém para criar uma boa base 
 
 Aqui estão algumas soluções para tentar chegar ao ideal do realismo dos NPCs em torno de um ambiente nos jogos.
 
-## Agente racional
+### Agente racional
 
 Age em um ambiente, maximizando sua medida de desempenho para atingir o objetivo.
 
@@ -101,7 +101,7 @@ Ele possui sensores que ajudam a atuar nesse ambiente, e cada vez que o ambiente
 Isso também é chamado de IA Corporificada.
 
 
-## NPCs com Heurísticas
+### NPCs com Heurísticas
 
 Existem algumas técnicas que implementam isso. As mais conhecidas são:
 
@@ -114,13 +114,13 @@ Existem algumas técnicas que implementam isso. As mais conhecidas são:
 - Lógica Fuzzy
     - São tomadas de decisão, mas com pesos, para tentar simular um erro humano.
 
-## NPCs com Plano e Mapa
+### NPCs com Plano e Mapa
 
 Essa ideia implementa aos NPCs um mapa próprio em formato de caminhos, onde eles o utilizam para descobrir caminhos mínimos, fluxos máximos ou fazer buscas, tudo utilizando a ideia de grafos.
 
 Sim, NPCs podem ter uma representação de um mapa programado para si, e nesse mapa "próprio" possui grafos.
 
-## NPCs com Controlador Neural
+### NPCs com Controlador Neural
 
 São NPCs dotados de uma rede neural que recebem o estado na entrada e classificam a melhor ação.
 
@@ -128,7 +128,7 @@ Se o NPC fizer um estado certo, a gente recompensa ele. Por exemplo, um NPC vê 
 
 Isso é feito através do que chamamos de **Aprendizado por Reforço Profundo**, que basicamente treina por tentativa e erro, recompensando o agente quando ele escolher a ação certa.
 
-## Neuroevolução
+### Neuroevolução
 
 Essa solução é comparada com a seleção natural.
 
